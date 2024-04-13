@@ -1,1 +1,46 @@
-<p>modal-registry works!</p>
+<p-dialog
+[(visible)]="visibleA"
+[style]="{ width: '50vw' }"
+[modal]="true"
+class="model"
+styleClass="p-fluid"
+[baseZIndex]="999"
+>
+<form>
+  <h2 class="text-center">Granja</h2>
+  <div class="form-row">
+    <div class="form-group col-md-12">
+      <label>Nombre de la granja</label>
+      <input
+        type="text"
+        name="createProd.nameProv"
+        [(ngModel)]="pedidos.nameProv"
+        class="form-control"
+        required
+      />
+    </div>
+
+    <div class="form-group col-md-12 ">
+      <label>cantidad</label>
+      <input
+
+        type="text"
+        name="createProd.cantidad"
+        [(ngModel)]="pedidos.cantidad"
+        #inputPlaces
+        id="inputPlaces"
+        class="form-control"
+        required
+      />
+    </div>
+
+    <br />
+      <button
+        type="submit"
+        class="btn btn-primary btn-block"
+      >
+        Crear granja
+      </button>
+  </div>
+</form>
+</p-dialog>

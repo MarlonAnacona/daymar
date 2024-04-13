@@ -12,3 +12,12 @@ export interface user {
   phoneNumber: number;
   password: string;
 }
+
+
+export interface pedidos{
+  nameProv: string;
+  dateStart: string;
+  dateEnd: string;
+  cantidad: number;
+  precio: number
+}

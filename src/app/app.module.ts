@@ -30,6 +30,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { CheckboxModule } from 'primeng/checkbox';
 
 import { MatDialogModule } from '@angular/material/dialog';
+import { ComponenteModule } from './componentes/componente.module';
+import { DialogModule } from '@angular/cdk/dialog';
 
 const routes: Routes = [
   { path: '', redirectTo: 'Home', pathMatch: 'full' },
@@ -55,8 +57,6 @@ const routes: Routes = [
     LoginComponent,
     DashboardComponent,
     RegistryComponent,
-    ModalRegistryComponent
-
 
   ],
   imports: [
@@ -84,11 +84,9 @@ const routes: Routes = [
     CheckboxModule,
     PasswordModule,
     ToastModule,
-  MatDialogModule
-
-
-
-
+  MatDialogModule,
+    DialogModule,
+  ComponenteModule
   ],
   providers: [MessageService, ConfirmationService, AuthGuardService, Authservice],
   bootstrap: [AppComponent]

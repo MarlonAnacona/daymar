@@ -30,5 +30,31 @@ export class ServicesService {
     return this.Http.get(this.urlCRUD + 'users/api/'+ id,{headers});
   }
 
+  tokenRefresh(): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
+   const token={
+    refresh: localStorage.getItem('tokenRefresh')
+   }
+    return this.Http.post(this.url+'users/api/token/refresh/',  token, {headers})
+  }
 
+  refresacarToken(){
+    this.tokenRefresh().subscribe({ next: (response)=>{
+
+      localStorage.setItem('token',response.access)
+    }})
+  }
+
+  getMonth(token:any) :Observable<any>{
+
+    const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
+    return this.Http.get(this.url+'farms/get-farm/',{headers});
+}
+
+
+getStadistic(token:any, month:any) :Observable<any>{
+
+  const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
+  return this.Http.get(this.url+'farms/get-farm/',{headers});
+}
 }
