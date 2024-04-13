@@ -1,0 +1,59 @@
+.container {
+  width: 30%;
+  padding-left: 1rem;
+  padding-right: 0rem;
+  padding-top: 5rem;
+  padding-bottom: 10rem;
+  margin-left: 2rem;
+  margin-right: auto;
+  margin-block-end: auto;
+  background-color: rgb(255, 255, 255);
+  border-radius: 70px;
+}
+.containerImage {
+  width: 85%;
+  height: 85%;
+  padding-left: 0rem;
+  padding-right: 0rem;
+  padding-top: 5rem;
+  padding-bottom: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-block-end: auto;
+  background-color: rgba(243, 243, 243, 0);
+  border-radius: 10px;
+}
+
+.titleContratista {
+  width: 500;
+  height: 40;
+  border-radius: 5px;
+  left: 142px;
+  top: 156px;
+  font-family: "Roboto Condensed";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 75px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #016d38;
+}
+
+.image {
+  background-repeat: no-repeat;
+
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/a/ab/Competencias_laborales.jp.jpg");
+  background-size: 100% 100%;
+}
+.letter {
+  font-family: "Roboto Condensed,sans-serif";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 25px;
+  line-height: 75px;
+  display: absolute;
+  align-items: center;
+  text-align: center;
+}

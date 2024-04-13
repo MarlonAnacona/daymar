@@ -1,0 +1,51 @@
+<div ng-controller="controller">
+  <div ng-init="inicio()">
+    <p-toast></p-toast>
+
+    <div class="containerImage">
+      <div class="image">
+        <div class="container">
+          <p-toast></p-toast>
+
+          <div class="titleContratista">
+            Bienvenido a nuestro portal, Por favor ingrese sus datos
+          </div>
+
+          <div class="card">
+            <div class="letter">Ingrese el número de identificación</div>
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input
+                  class="col-12"
+                  id="float-input"
+                  type="text"
+                  pInputText
+                  [(ngModel)]="userlogin.identificacion"
+                />
+                <label for="float-input"> Identificación</label>
+              </span>
+            </div>
+
+            <div class="letter">Ingrese su contraseña</div>
+            <div class="field col-11 flex justify-content-center">
+              <p-password
+                class="field col-12 flex justify-content-center"
+                [(ngModel)]="userlogin.password"
+                [feedback]="false"
+              ></p-password>
+            </div>
+
+            <div class="field col-11 flex justify-content-center">
+              <button
+                pButton
+                type="button"
+                label="Ingresar"
+                (click)="ingresar($event)"
+              ></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
