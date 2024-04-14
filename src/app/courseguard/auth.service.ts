@@ -5,8 +5,11 @@ export class Authservice {
   //En caso de estar logeado
   login() {
     if (this.loogedIn) {
+      console.log("login")
       this.loogedIn;
     } else {
+      console.log("null")
+
       this.loogedIn = null;
     }
   }

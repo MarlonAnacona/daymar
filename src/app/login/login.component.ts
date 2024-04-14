@@ -25,7 +25,6 @@ export class LoginComponent implements OnInit {
   constructor(
     private usuariosService: ServicesService,
     private route: Router,
-    private authservice: Authservice,
     private messageService: MessageService
   ) {}
 
@@ -33,8 +32,8 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     //En caso de ingresar a la pagina, se remueve los permisos de navegar al estar logeado
 
-    localStorage.removeItem('logeado');
-    this.authservice.logout();
+    localStorage.removeItem('token');
+    localStorage.removeItem('tokenRefresh');
 
 
   }
@@ -47,8 +46,11 @@ export class LoginComponent implements OnInit {
     let identificacionencontrada;
     //Evaluar si los campos han sido completados
     if (this.userlogin.password != '' && this.userlogin.identificacion != '') {
+      localStorage.setItem('token', "response.tokenSessionAccess");
+      localStorage.setItem('tokenRefresh', "response.tokenSessionRefresh");
+      this.route.navigate(['../Dashboard'])
       //Envia el servicio los parametros para validar los datos
-        this.usuariosService.login(this.userlogin).subscribe({
+       /* this.usuariosService.login(this.userlogin).subscribe({
       next: (response) => {
         localStorage.setItem('token', response.tokenSessionAccess);
         localStorage.setItem('tokenRefresh', response.tokenSessionRefresh);
@@ -80,7 +82,7 @@ export class LoginComponent implements OnInit {
           detail: 'Intente nuevamente',
         });
       },
-    });
+    });*/
     } else {
       //En caso de no completar los campos
       this.messageService.add({

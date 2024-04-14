@@ -5,8 +5,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { RegistryComponent } from './registry/registry.component';
-import { ModalRegistryComponent } from './componentes/modal-registry/modal-registry.component';
-import { Router, RouterModule, Routes } from '@angular/router';
+import {  RouterModule, Routes } from '@angular/router';
 import { AuthGuardService } from './courseguard/auth-guard.service';
 import { Authservice } from './courseguard/auth.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -34,9 +33,9 @@ import { ComponenteModule } from './componentes/componente.module';
 import { DialogModule } from '@angular/cdk/dialog';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'Home', pathMatch: 'full' },
+  { path: '', redirectTo: 'Login', pathMatch: 'full' },
   {
-    path: 'Home',
+    path: 'Login',
     component: LoginComponent,
   },
   {

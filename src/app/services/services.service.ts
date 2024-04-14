@@ -57,4 +57,11 @@ getStadistic(token:any, month:any) :Observable<any>{
   const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
   return this.Http.get(this.url+'farms/get-farm/',{headers});
 }
+
+logout(): Observable<any>{
+  const token={
+    token: localStorage.getItem('tokenRefresh')
+  }
+  return this.Http.post(this.urlCRUD+'users/api/logout', token)
+}
 }
