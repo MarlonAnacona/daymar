@@ -21,3 +21,11 @@ export interface pedidos{
   cantidad: number;
   precio: number
 }
+
+export interface materiaP{
+  id:number;
+  name: string;
+  material: string;
+  price: number;
+
+}

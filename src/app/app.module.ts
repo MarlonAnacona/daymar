@@ -30,7 +30,10 @@ import { CheckboxModule } from 'primeng/checkbox';
 
 import { MatDialogModule } from '@angular/material/dialog';
 import { ComponenteModule } from './componentes/componente.module';
-import { DialogModule } from '@angular/cdk/dialog';
+import { DialogModule } from 'primeng/dialog';
+
+import { TableModule } from 'primeng/table';
+import { CardModule } from 'primeng/card';
 
 const routes: Routes = [
   { path: '', redirectTo: 'Login', pathMatch: 'full' },
@@ -85,7 +88,11 @@ const routes: Routes = [
     ToastModule,
   MatDialogModule,
     DialogModule,
-  ComponenteModule
+  ComponenteModule,
+  DialogModule,
+  TableModule,
+  CardModule,
+
   ],
   providers: [MessageService, ConfirmationService, AuthGuardService, Authservice],
   bootstrap: [AppComponent]

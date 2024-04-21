@@ -1,1 +1,272 @@
-<p>registry works!</p>
+<menu-bar-user></menu-bar-user>
+<div id="Principal" style="display: flexbox">
+  <div id="textoInicial" style="text-align: center">Registro materia prima</div>
+  <p-card [style]="{
+      display: 'flexbox',
+      width: '80%',
+      height: '80%',
+      margin: '0 auto'
+    }">
+
+    <!-- Card principal -->
+    <div class="card">
+      <p-table #dt [value]="product_materia" [rows]="10" [paginator]="true"
+        [globalFilterFields]="['name', 'material']" responsiveLayout="scroll"
+        [tableStyle]="{ 'min-width': '50rem' }" [(selection)]="selected_farm" [rowHover]="true" dataKey="Nombre"
+        currentPageReportTemplate="Mostrando  {first} pagina de {last}. Datos totales {totalRecords} "
+        [showCurrentPageReport]="true" [columns]="columnas">
+
+        <ng-template pTemplate="caption">
+
+          <div class="flex align-items-center justify-content-between">
+            <span class="p-input-icon-right">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Buscar..." />
+
+            </span>
+
+          </div>
+
+          <div class="flex">       <button
+         type="button"
+         pButton
+         icon="pi pi-plus"
+         iconPos="right"
+         label="Crear registro"
+         (click)="showCreateRegistry()"
+         style="margin: 0.5rem"
+         class="p-button-success p-mr-2"
+         tooltipPosition="bottom"
+       ></button>
+
+       <button
+       type="button"
+       pButton
+       icon="pi pi-file"
+       iconPos="right"
+       label="Exportar"
+       (click)="dt.exportCSV()"
+       class="p-button-info ml-auto" pTooltip="Selection Only" tooltipPosition="bottom"      ></button>
+
+        </div>
+
+        </ng-template>
+
+        <ng-template pTemplate="header">
+
+
+          <tr>
+            <th style="width: 3rem">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th pSortableColumn="name">
+              Nombre <p-sortIcon field="name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="material">
+              material <p-sortIcon field="material"></p-sortIcon>
+            </th>
+            <th pSortableColumn="price">
+                Precio <p-sortIcon field="Precio"></p-sortIcon>
+            </th>
+
+            <th>Ver registros</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product_materia>
+          <tr>
+            <td>
+              <p-tableCheckbox [value]="product_materia"></p-tableCheckbox>
+            </td>
+            <td>{{ product_materia.name }}</td>
+            <td>{{ product_materia.material }}</td>
+            <td>{{ product_materia.price }}</td>
+
+            <td>
+              <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-success mr-2"
+                [value]="product_materia" (click)="showParcel(product_materia.id,product_materia.name)"
+                (click)="registry(product_materia.id)"></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+          <div class="flex align-items-center justify-content-between">
+            Tiene en total: {{ product_materia ? product_materia.length : 0 }} Granjas.
+          </div>
+        </ng-template>
+      </p-table>
+
+      <!-- Crear una parcela -->
+      <div class="parcela">
+        <p-dialog [(visible)]="visibleCreateFarm" [style]="{ width: '50vw' }" [modal]="true" class="model"
+          styleClass="p-fluid" [baseZIndex]="999">
+          <h2 class="text-center">Crea tus registros</h2>
+          <br />
+          <form (ngSubmit)="onSubmit()">
+
+            <br>
+
+
+
+            <br>
+            <div class="texInformation">
+              <div class="text-center" *ngIf="selectedOption">
+                <h3>Información:</h3>
+                <p>Descripción: {{ selectedOption.description }}</p>
+                <p>CBD: {{ selectedOption.cbd }} %</p>
+                <p>THC: {{ selectedOption.thc }} %</p>
+              </div>
+            </div>
+
+            <div class="width">
+              <label for="name">Nombre:&nbsp;</label>
+              <input type="text" id="name" name="name" [(ngModel)]="name" required>
+            </div>
+            <br>
+
+            <div class="length">
+              <label for="precio">precio:&nbsp;</label>
+              <input type="number" id="precio" name="precio" [(ngModel)]="precio" required>
+            </div>
+            <br>
+            <div class="length">
+              <label for="material">material:&nbsp;</label>
+              <input type="text" id="material" name="material" [(ngModel)]="material" required>
+            </div>
+            <br>
+
+
+
+            <br>
+            <button class="btn btn-primary btn-block" type="submit">Enviar</button>
+          </form>
+        </p-dialog>
+      </div>
+
+
+      <!-- Informacion de parcelas -->
+      <!--nombre_variable despues en type script -->
+      <p-dialog [(visible)]="visibleParcel" [style]="{ width: '50vw' }" [modal]="true" class="model"
+        styleClass="p-fluid" [baseZIndex]="999">
+        <br />
+        <p-table #dp [value]="produt_parcel" [rows]="10" [paginator]="true"
+          [globalFilterFields]="['id', 'width', 'length', 'crop_modality', 'create_date']" responsiveLayout="scroll"
+          [tableStyle]="{ 'min-width': '50rem' }" [(selection)]="selectedParcelas" [rowHover]="true" dataKey="id"
+          currentPageReportTemplate="Mostrando  {first} pagina de {last}. Datos totales {totalRecords} "
+          [showCurrentPageReport]="true">
+          <!-- <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+              <span class="p-input-icon-right">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="dp.filterGlobal($any($event.target).value, 'contains')"
+                  placeholder="Buscar..." />
+              </span>
+            </div>
+          </ng-template> -->
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 3rem">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th pSortableColumn="id">
+                Identificación <p-sortIcon field="Id"></p-sortIcon>
+              </th>
+              <th pSortableColumn="width">
+                Ancho <p-sortIcon field="width"></p-sortIcon>
+              </th>
+              <th pSortableColumn="length">
+                Largo <p-sortIcon field="length"></p-sortIcon>
+              </th>
+              <th pSortableColumn="crop_modality">
+                Modalidad de cultivo <p-sortIcon field="crop_modality"></p-sortIcon>
+              </th>
+              <th pSortableColumn="create_date">
+                Fecha de creación <p-sortIcon field="create_date"></p-sortIcon>
+              </th>
+              <th pSortableColumn="info">
+                Editar/Ver <p-sortIcon field="create_date"></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-produt_parcel>
+            <tr>
+              <td>
+                <p-tableCheckbox [value]="produt_parcel"></p-tableCheckbox>
+              </td>
+              <td>{{ produt_parcel.id }}</td>
+              <td>{{ produt_parcel.name }}</td>
+              <td>{{ produt_parcel.material }}</td>
+              <td>{{ produt_parcel.price}}</td>
+              <td>
+                <button pButton pRipple icon="pi pi-info" class="p-button-rounded p-button-success mr-2"
+                  [value]="produt_parcel" (click)="showParcelEdit(produt_parcel.id,produt_parcel)"
+                ></button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">
+              Tiene en total: {{ produt_parcel ? produt_parcel.length : 0 }} Parcelas.
+            </div>
+          </ng-template>
+        </p-table>
+      </p-dialog>
+      <!-- <p-dialog [(visible)]="editVisibleParcel" [style]="{ width: '50vw' }" [modal]="true" class="model"
+      styleClass="p-fluid" [baseZIndex]="999">
+      <h2 class="text-center">Edita tu parcela</h2>
+          <br />
+          <form (ngSubmit)="onSubmit2()">
+
+            <br>
+
+            <div class="seedName1">
+              <label for="seedName">Nombre del registro:&nbsp;</label>
+              <select id="seedName" name="seedName" [(ngModel)]="seedName" (ngModelChange)="onSeedNameChange()"
+              [value]="specie_nameInput"
+              required>
+                <option value="">Seleccione una opción</option>
+                <option *ngFor="let option of seedOptions" [value]="option.species_name">{{ option.species_name }}
+                </option>
+              </select>
+            </div>
+
+            <br>
+            <div class="texInformation">
+              <div class="text-center" *ngIf="selectedOption">
+                <h3>Información:</h3>
+                <p>Descripción: {{ selectedOption.description }}</p>
+                <p>CBD: {{ selectedOption.cbd }} %</p>
+                <p>THC: {{ selectedOption.thc }} %</p>
+              </div>
+            </div>
+
+            <div class="width1">
+              <label for="width">Precio:&nbsp;</label>
+              <input type="number" id="widthInput" name="widthInput" [(ngModel)]="widthInput" [value]="widthInput" required>
+            </div>
+            <br>
+
+            <div class="length1">
+              <label for="length">Largo:&nbsp;</label>
+              <input type="number" id="lengthInput" name="lengthInput" [value]="lengthInput" [(ngModel)]="lengthInput" required>
+            </div>
+            <br>
+
+            <div class="cropModality1">
+              <label for="cropModality">Modalidad de cultivo:&nbsp;</label>
+
+              <select id="cropModality" name="cropModality" [(ngModel)]="cropModality" [value]="crop_modalityInput" required>
+                <option class="dropdown-item" value="">Seleccione una opción</option>
+                <option class="dropdown-item" value="Indoor">Interior</option>
+                <option class="dropdown-item" value="Outdoor">Exterior</option>
+              </select>
+            </div>
+
+            <br>
+            <button class="boton" type="submit">Editar</button>
+          </form>
+
+      </p-dialog> -->
+    </div>
+  </p-card>
+</div>

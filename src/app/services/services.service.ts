@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
-import { user, userLogin } from '../models/interfaces';
+import { materiaP, user, userLogin } from '../models/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -63,5 +63,14 @@ logout(): Observable<any>{
     token: localStorage.getItem('tokenRefresh')
   }
   return this.Http.post(this.urlCRUD+'users/api/logout', token)
+}
+
+getRegistry(id:number) :Observable<any>{
+  const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
+  return this.Http.get(this.url+'farms/get-registry?registry_id='+id,{headers});
+}
+
+createParcela(data: materiaP) {
+  return this.Http.post(this.url + 'farms/create-materia', data);
 }
 }
