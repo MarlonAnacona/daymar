@@ -1,5 +1,16 @@
 @import url(https://unpkg.com/leaflet@1.9.3/dist/leaflet.css);
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700);
+.letter {
+  font-family: "Roboto Condensed,sans-serif";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 25px;
+  line-height: 75px;
+  display: absolute;
+  align-items: center;
+  text-align: center;
+}
+
 
 .html,
 .Principal {

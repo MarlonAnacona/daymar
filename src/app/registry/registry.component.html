@@ -104,34 +104,40 @@
           <br />
           <form (ngSubmit)="onSubmit()">
 
-            <br>
 
 
+              <div class="letter">Ingrese el nombre del registro</div>
+              <div class="field col-11 flex justify-content-center">
+                <span class="p-float-label col-11 flex justify-content-center">
 
-            <br>
-            <div class="texInformation">
-              <div class="text-center" *ngIf="selectedOption">
-                <h3>Información:</h3>
-                <p>Descripción: {{ selectedOption.description }}</p>
-                <p>CBD: {{ selectedOption.cbd }} %</p>
-                <p>THC: {{ selectedOption.thc }} %</p>
-              </div>
-            </div>
+              <input     class="col-12"
+              id="float-input"
+              type="text"
+              pInputText
+               [(ngModel)]="name" required/>
+              <label for="name">Nombre&nbsp;</label>
 
-            <div class="width">
-              <label for="name">Nombre:&nbsp;</label>
-              <input type="text" id="name" name="name" [(ngModel)]="name" required>
+                </span>
             </div>
             <br>
 
-            <div class="length">
-              <label for="precio">precio:&nbsp;</label>
-              <input type="number" id="precio" name="precio" [(ngModel)]="precio" required>
+            <div class="letter">Ingrese el precio</div>
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+              <input class="col-12" type="text" id="precio" name="precio" [(ngModel)]="precio" required/>
+              <label for="precio">&nbsp;</label>
+
+            </span>
             </div>
             <br>
-            <div class="length">
-              <label for="material">material:&nbsp;</label>
-              <input type="text" id="material" name="material" [(ngModel)]="material" required>
+
+   <div class="letter">Ingrese el material  a utilizar</div>
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+              <input class="col-12" type="text" id="material" name="material" [(ngModel)]="material" required>
+              <label for="material">&nbsp;</label>
+
+            </span>
             </div>
             <br>
 
