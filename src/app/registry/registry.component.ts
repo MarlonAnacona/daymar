@@ -4,6 +4,7 @@ import { materiaP } from '../models/interfaces';
 import { ServicesService } from '../services/services.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { HttpClient } from '@angular/common/http';
+import jwt_decode from 'jwt-decode';
 
 
 @Component({
@@ -33,14 +34,11 @@ export class RegistryComponent  implements OnInit{
   display: any;
   busquedad: string = '';
   mensaje: string = '';
-  center: google.maps.LatLngLiteral = {
-    lat: 24,
-    lng: 12,
-  };
+
 
   farmId: number = 0;
   material: string = '';
-  name: string = '';
+  name_registry: string = '';
   precio: number = 0;
   cropModality: string = "";
   seedOptions: any[] = [];
@@ -52,12 +50,16 @@ export class RegistryComponent  implements OnInit{
   lengthInput:string=""
   crop_modalityInput:string=""
   selectedOption: any;
-
+  selectedOptionMedida: any;
+  remaining_amount:string=""
   parcelaCreate: any;
   parcelaEdit: any;
   idSeedSet: number = -1;
-
-
+  material_type:string[]=[];
+  unit_of_measure:string[]= []
+  tokenObject:any;
+  materialselected:any;
+  unit_selected:any;
 
   constructor(private services: ServicesService,
     private messagerService: MessageService,
@@ -93,6 +95,9 @@ export class RegistryComponent  implements OnInit{
 
       }
     ]
+
+    this.material_type= ["Hilo", "Tela", "Cierre", "Resorte", "Aguja"]
+    this.unit_of_measure= ["Metros" , "cuadrados", "Unidad", "Centimetro"]
   }
 
   showCreateRegistry() {
@@ -101,14 +106,22 @@ export class RegistryComponent  implements OnInit{
   }
 
 
-  onSubmit() {
 
+
+  onSubmit() {
+    this.tokenObject=localStorage.getItem("token")
+
+if(this.tokenObject!=null){
+this.tokenObject=jwt_decode(this.tokenObject)
+}
     const data = {
-      id: this.farmId,
-      name: this.name,
-      material: this.material,
-      price: this.precio,
-      token: localStorage.getItem("token")
+      name: this.name_registry,
+      material_type: this.materialselected,
+      remaining_amount: this.remaining_amount,
+      unit_price: this.precio,
+      unit_of_measure:this.unit_selected,
+      user_register:this.tokenObject.user_id
+
     };
 
     this.createRegistry(data)

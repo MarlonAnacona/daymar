@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
-import { materiaP, user, userLogin } from '../models/interfaces';
+import { materiaP, materiaPcreate, user, userLogin } from '../models/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -10,24 +10,24 @@ import { materiaP, user, userLogin } from '../models/interfaces';
 export class ServicesService {
 
   urlEcommerce: string = 'http://localhost:8080/';
-  urlCRUD: string = 'https://weedweb-crud.onrender.com/';
-  url: string = 'https://farm-api-2.onrender.com/';
+  urlCRUD: string = 'https://tailor-shop-backend.onrender.com/';
+  url: string = 'https://tailor-shop-backend.onrender.com/';
 
 
   constructor(private Http: HttpClient) { }
 
   login(data: userLogin): Observable<any> {
-    return this.Http.post(this.urlCRUD + 'users/api/SignIn', data);
+    return this.Http.post(this.urlCRUD + 'users/api/token/', data);
   }
 
   userRegister(data: user) {
-    return this.Http.post(this.urlCRUD + 'users/api/person', data);
+    return this.Http.post(this.urlCRUD + 'users/create/', data);
   }
 
 
   getUser(id:any ): Observable<any>{
     const headers = new HttpHeaders().set('Authorization', 'Bearer '+ localStorage.getItem('token'));
-    return this.Http.get(this.urlCRUD + 'users/api/'+ id,{headers});
+    return this.Http.get(this.urlCRUD + 'users/'+ id+'/',{headers});
   }
 
   tokenRefresh(): Observable<any> {
@@ -70,7 +70,8 @@ getRegistry(id:number) :Observable<any>{
   return this.Http.get(this.url+'farms/get-registry?registry_id='+id,{headers});
 }
 
-createParcela(data: materiaP) {
-  return this.Http.post(this.url + 'farms/create-materia', data);
+createParcela(data: materiaPcreate) {
+  const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
+  return this.Http.post(this.url + 'raw_materials/create-raw-material/', data,{headers});
 }
 }

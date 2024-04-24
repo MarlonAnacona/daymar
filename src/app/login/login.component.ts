@@ -14,7 +14,7 @@ import jwt_decode from 'jwt-decode';
 export class LoginComponent implements OnInit {
   //Variables a utilizar
   public userlogin: userLogin = {
-    identificacion: '',
+    email: '',
     password: '',
   };
   public name: any;
@@ -45,29 +45,28 @@ export class LoginComponent implements OnInit {
     let body;
     let identificacionencontrada;
     //Evaluar si los campos han sido completados
-    if (this.userlogin.password != '' && this.userlogin.identificacion != '') {
-      localStorage.setItem('token', "response.tokenSessionAccess");
-      localStorage.setItem('tokenRefresh', "response.tokenSessionRefresh");
-      this.route.navigate(['../Dashboard'])
+    if (this.userlogin.password != '' && this.userlogin.email != '') {
+      // localStorage.setItem('token', "response.tokenSessionAccess");
+      // localStorage.setItem('tokenRefresh', "response.tokenSessionRefresh");
+      // this.route.navigate(['../Dashboard'])
       //Envia el servicio los parametros para validar los datos
-       /* this.usuariosService.login(this.userlogin).subscribe({
+        this.usuariosService.login(this.userlogin).subscribe({
       next: (response) => {
-        localStorage.setItem('token', response.tokenSessionAccess);
-        localStorage.setItem('tokenRefresh', response.tokenSessionRefresh);
-        const email = response.emailUser
+        localStorage.setItem('token', response.access);
+        localStorage.setItem('tokenRefresh', response.refresh);
+        const email = this.userlogin.email
         const userName = email.split('@')[0]
         localStorage.setItem('userName', userName);
         localStorage.setItem('email', email);
-        this.tokenObject = jwt_decode(response.tokenSessionAccess);
-        this.route.navigate(['../Dashboard']);
-          this.usuariosService.getUser(this.tokenObject.userId).subscribe({
+        this.tokenObject = jwt_decode(response.access);
+          this.usuariosService.getUser(this.tokenObject.user_id).subscribe({
             next: (data) => {
                   this.messageService.add({
                     severity: 'success',
                     summary: 'Bienvenido ',
                     detail: ' ',
                   });
-                  this.route.navigate(['../CreateFarm']);
+                  this.route.navigate(['../Dashboard']);
 
                 },
                   error : (err)=>{
@@ -82,7 +81,7 @@ export class LoginComponent implements OnInit {
           detail: 'Intente nuevamente',
         });
       },
-    });*/
+    });
     } else {
       //En caso de no completar los campos
       this.messageService.add({

@@ -110,18 +110,14 @@
               <div class="field col-11 flex justify-content-center">
                 <span class="p-float-label col-11 flex justify-content-center">
 
-              <input     class="col-12"
-              id="float-input"
-              type="text"
-              pInputText
-               [(ngModel)]="name" required/>
-              <label for="name">Nombre&nbsp;</label>
+              <input     class="col-12" name="name_registry" id="name_registry" type="text" [(ngModel)]="name_registry" required/>
+              <label for="name_registry">Nombre&nbsp;</label>
 
                 </span>
             </div>
             <br>
 
-            <div class="letter">Ingrese el precio</div>
+            <div class="letter">Ingrese el precio por unidad</div>
             <div class="field col-11 flex justify-content-center">
               <span class="p-float-label col-11 flex justify-content-center">
               <input class="col-12" type="text" id="precio" name="precio" [(ngModel)]="precio" required/>
@@ -131,16 +127,39 @@
             </div>
             <br>
 
-   <div class="letter">Ingrese el material  a utilizar</div>
+            <div class="letter">Ingrese el material a utilizar</div>
             <div class="field col-11 flex justify-content-center">
               <span class="p-float-label col-11 flex justify-content-center">
-              <input class="col-12" type="text" id="material" name="material" [(ngModel)]="material" required>
-              <label for="material">&nbsp;</label>
+                <select class="col-12" id="material" name="material" [(ngModel)]="materialselected" required>
+                  <option *ngFor="let type of material_type" [value]="type">{{ type }}</option>
+                </select>
+                <label for="material">Material&nbsp;</label>
+              </span>
+            </div>
+            <br>
+
+            <br>
+
+            <div class="letter">Ingrese la unidad de medida</div>
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <select class="col-12" id="unit_of_measure" name="unit_of_measure" [(ngModel)]="unit_selected" required>
+                  <option *ngFor="let type of unit_of_measure" [value]="type">{{ type }}</option>
+                </select>
+                <label for="material">Unidad de medida&nbsp;</label>
+              </span>
+            </div>
+            <br>
+
+            <div class="letter">Ingrese la cantidad</div>
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+              <input class="col-12" type="text" id="remaining_amount" name="remaining_amount" [(ngModel)]="remaining_amount" required/>
+              <label for="precio">&nbsp;</label>
 
             </span>
             </div>
             <br>
-
 
 
             <br>
