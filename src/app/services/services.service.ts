@@ -69,6 +69,10 @@ getRegistry(id:number) :Observable<any>{
   const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
   return this.Http.get(this.url+'farms/get-registry?registry_id='+id,{headers});
 }
+getallRegistry() :Observable<any>{
+  const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
+  return this.Http.get(this.url+'raw_materials/list-raw-materials/',{headers});
+}
 
 createParcela(data: materiaPcreate) {
   const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));

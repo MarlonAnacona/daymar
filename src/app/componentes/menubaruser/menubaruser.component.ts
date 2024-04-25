@@ -31,26 +31,28 @@ export class MenubaruserComponent implements OnInit {
   }
 
   logout(){
-    this.service.logout().subscribe({
-      next:(res) => {
-        this.message.add({
-          severity: 'success',
-          summary: 'Sesion cerrada de forma exitosa',
-          detail: ' ',
-        });
-        this.route.navigate(['../Login']);
-        localStorage.removeItem('token')
-        localStorage.removeItem('tokenRefresh')
-        },
-        error:(err)=>{
-          this.message.add({
-            severity: 'error',
-            summary: 'Error al realizar el logout',
-            detail: JSON.stringify(err)
-          });
-        }
+    this.route.navigate(['../Login']);
 
-      }
-    )
+    // this.service.logout().subscribe({
+    //   next:(res) => {
+    //     this.message.add({
+    //       severity: 'success',
+    //       summary: 'Sesion cerrada de forma exitosa',
+    //       detail: ' ',
+    //     });
+    //     this.route.navigate(['../Login']);
+    //     localStorage.removeItem('token')
+    //     localStorage.removeItem('tokenRefresh')
+    //     },
+    //     error:(err)=>{
+    //       this.message.add({
+    //         severity: 'error',
+    //         summary: 'Error al realizar el logout',
+    //         detail: JSON.stringify(err)
+    //       });
+    //     }
+
+    //   }
+    // )
   }
 }

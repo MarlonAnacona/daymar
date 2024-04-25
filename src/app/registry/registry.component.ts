@@ -66,7 +66,7 @@ export class RegistryComponent  implements OnInit{
     private confirmationService: ConfirmationService,
     private http: HttpClient,
   ) { }
-  ngOnInit(): void {
+  async ngOnInit() {
     this.columnas = [
       {
         field: 'id_reigstry',
@@ -87,17 +87,23 @@ export class RegistryComponent  implements OnInit{
 
     ];
 
-    this.product_materia=[
-      {
-        name: "string",
-        material: "string",
-        price: 1500,
-
-      }
-    ]
-
+    await this.getRegistry()
     this.material_type= ["Hilo", "Tela", "Cierre", "Resorte", "Aguja"]
     this.unit_of_measure= ["Metros" , "cuadrados", "Unidad", "Centimetro"]
+  }
+
+  async getRegistry(){
+    this.product_materia= this.services.getallRegistry().subscribe({
+      next:(response)=>{
+          this.product_materia= response
+      },error:(err)=>{
+        this.messagerService.add({
+          severity: 'error',
+          summary: 'Hubo un error ',
+          detail: 'No se trajeron registros con éxito',
+        });
+      }
+    })
   }
 
   showCreateRegistry() {

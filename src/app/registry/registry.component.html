@@ -79,8 +79,8 @@
               <p-tableCheckbox [value]="product_materia"></p-tableCheckbox>
             </td>
             <td>{{ product_materia.name }}</td>
-            <td>{{ product_materia.material }}</td>
-            <td>{{ product_materia.price }}</td>
+            <td>{{ product_materia.material_type }}</td>
+            <td>{{ product_materia.unit_price }}</td>
 
             <td>
               <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-success mr-2"
@@ -91,7 +91,7 @@
         </ng-template>
         <ng-template pTemplate="summary">
           <div class="flex align-items-center justify-content-between">
-            Tiene en total: {{ product_materia ? product_materia.length : 0 }} Granjas.
+            Tiene en total: {{ product_materia ? product_materia.length : 0 }} Registros.
           </div>
         </ng-template>
       </p-table>
