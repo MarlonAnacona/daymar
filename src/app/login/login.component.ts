@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
                     summary: 'Bienvenido ',
                     detail: ' ',
                   });
-                  this.route.navigate(['../Dashboard']);
+                  this.route.navigate(['../Registry']);
 
                 },
                   error : (err)=>{
