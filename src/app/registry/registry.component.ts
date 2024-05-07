@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { materiaP } from '../models/interfaces';
 import { ServicesService } from '../services/services.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { HttpClient } from '@angular/common/http';
 import jwt_decode from 'jwt-decode';
+import { Table } from 'primeng/table';
 
 
 @Component({
@@ -50,6 +51,7 @@ export class RegistryComponent  implements OnInit{
   lengthInput:string=""
   crop_modalityInput:string=""
   selectedOption: any;
+  selectedOptionServices: any;
   selectedOptionMedida: any;
   remaining_amount:string=""
   parcelaCreate: any;
@@ -60,34 +62,31 @@ export class RegistryComponent  implements OnInit{
   tokenObject:any;
   materialselected:any;
   unit_selected:any;
+   translations:any = {
+    id: 'Identificación',
+    material_type: 'Tipo de Material',
+    name: 'Nombre',
+    remaining_amount: 'Cantidad Restante',
+    unit_of_measure: 'Unidad de Medida',
+    unit_price: 'Precio Unitario',
+    user_register: 'Usuario Registrado'
+  };
+  @ViewChild('dt') dt!: Table;
+
+
 
   constructor(private services: ServicesService,
     private messagerService: MessageService,
     private confirmationService: ConfirmationService,
     private http: HttpClient,
-  ) { }
+  ) {
+
+
+   }
   async ngOnInit() {
-    this.columnas = [
-      {
-        field: 'id_reigstry',
-        header: 'Id de registro',
-      },
-      {
-        field: 'name',
-        header: 'nombre registro',
-      },
-      {
-        field: 'material',
-        header: 'Material de registro',
-      },
-      {
-        field: 'price',
-        header: 'Precio',
-      },
 
-    ];
+    this.services.refresacarToken();
 
-    await this.getRegistry()
     this.material_type= ["Hilo", "Tela", "Cierre", "Resorte", "Aguja"]
     this.unit_of_measure= ["Metros" , "cuadrados", "Unidad", "Centimetro"]
   }
@@ -96,6 +95,15 @@ export class RegistryComponent  implements OnInit{
     this.product_materia= this.services.getallRegistry().subscribe({
       next:(response)=>{
           this.product_materia= response
+          if (this.product_materia && this.product_materia.length > 0) {
+            const keys = Object.keys(this.product_materia[0]);
+
+            // Crear un objeto para cada clave con 'field' y 'header' con el nombre de la clave
+            this.columnas = keys.map(key => ({
+              field: key,
+              header: this.translations[key]
+            }));
+          }
       },error:(err)=>{
         this.messagerService.add({
           severity: 'error',
@@ -106,15 +114,73 @@ export class RegistryComponent  implements OnInit{
     })
   }
 
+
+
   showCreateRegistry() {
 
     this.visibleCreateFarm = true;
   }
 
 
+ async  onSelectionChange() {
+    if (this.selectedOptionServices === 'Materia_prima') {
+      this.product_materia= []
+      this.columnas=[]
+      await this.getRegistry()
+      // Llamar al servicio para obtener los datos de la opción 1
+    } else if (this.selectedOptionServices === 'confeccion') {
+      // Llamar al servicio para obtener los datos de la opción 2
+      this.product_materia= []
+      this.columnas=[]
+      //await this.getRegistryConfe()
+    } else if (this.selectedOptionServices === 'Reparacion') {
+      // Llamar al servicio para obtener los datos de la opción 3
+      this.product_materia= []
+      this.columnas=[]
+     // await this.getRegistryRepair()
+
+    }
+  }
+
+  exportar() {
+    if (this.selected_farm && this.selected_farm.length > 0) {
+      const header = Object.keys(this.selected_farm[0]).join(',');
+      const csv = this.selected_farm.map((row:any) => Object.values(row).join(',')).join('\n');
+      const blob = new Blob([header + '\n' + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'data.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+
 
 
   onSubmit() {
+    this.tokenObject=localStorage.getItem("token")
+
+if(this.tokenObject!=null){
+this.tokenObject=jwt_decode(this.tokenObject)
+}
+    const data = {
+      name: this.name_registry,
+      material_type: this.materialselected,
+      remaining_amount: this.remaining_amount,
+      unit_price: this.precio,
+      unit_of_measure:this.unit_selected,
+      user_register:this.tokenObject.user_id
+
+    };
+
+    this.createRegistry(data)
+  }
+
+
+
+  onSubmit2() {
     this.tokenObject=localStorage.getItem("token")
 
 if(this.tokenObject!=null){
@@ -187,6 +253,53 @@ this.tokenObject=jwt_decode(this.tokenObject)
 
     this.editVisibleParcel=true
 
+  }
+
+
+  async getRegistryConfe(){
+    this.product_materia= this.services.getallRegistry().subscribe({
+      next:(response)=>{
+          this.product_materia= response
+          if (this.product_materia && this.product_materia.length > 0) {
+            const keys = Object.keys(this.product_materia[0]);
+
+            // Crear un objeto para cada clave con 'field' y 'header' con el nombre de la clave
+            this.columnas = keys.map(key => ({
+              field: key,
+              header: this.translations[key]
+            }));
+          }
+      },error:(err)=>{
+        this.messagerService.add({
+          severity: 'error',
+          summary: 'Hubo un error ',
+          detail: 'No se trajeron registros con éxito',
+        });
+      }
+    })
+  }
+
+  async getRegistryRepair(){
+    this.product_materia= this.services.getallRegistry().subscribe({
+      next:(response)=>{
+          this.product_materia= response
+          if (this.product_materia && this.product_materia.length > 0) {
+            const keys = Object.keys(this.product_materia[0]);
+
+            // Crear un objeto para cada clave con 'field' y 'header' con el nombre de la clave
+            this.columnas = keys.map(key => ({
+              field: key,
+              header: this.translations[key]
+            }));
+          }
+      },error:(err)=>{
+        this.messagerService.add({
+          severity: 'error',
+          summary: 'Hubo un error ',
+          detail: 'No se trajeron registros con éxito',
+        });
+      }
+    })
   }
 
 }

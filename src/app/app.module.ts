@@ -58,8 +58,7 @@ const routes: Routes = [
     AppComponent,
     LoginComponent,
     DashboardComponent,
-    RegistryComponent,
-
+    RegistryComponent
   ],
   imports: [
     BrowserModule,

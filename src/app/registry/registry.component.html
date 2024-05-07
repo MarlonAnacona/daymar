@@ -1,6 +1,15 @@
 <menu-bar-user></menu-bar-user>
 <div id="Principal" style="display: flexbox">
-  <div id="textoInicial" style="text-align: center">Registro materia prima</div>
+  <div id="textoInicial" style="text-align: center">Registro de:
+    <select [(ngModel)]="selectedOptionServices" (change)="onSelectionChange()">
+
+      <option value="Materia_prima">Materia prima</option>
+      <option value="confeccion">Servicio de confección</option>
+      <option value="Reparacion">Reparación</option>
+    </select>
+  </div>
+
+
   <p-card [style]="{
       display: 'flexbox',
       width: '80%',
@@ -8,93 +17,70 @@
       margin: '0 auto'
     }">
 
+
     <!-- Card principal -->
     <div class="card">
       <p-table #dt [value]="product_materia" [rows]="10" [paginator]="true"
-        [globalFilterFields]="['name', 'material']" responsiveLayout="scroll"
-        [tableStyle]="{ 'min-width': '50rem' }" [(selection)]="selected_farm" [rowHover]="true" dataKey="Nombre"
-        currentPageReportTemplate="Mostrando  {first} pagina de {last}. Datos totales {totalRecords} "
-        [showCurrentPageReport]="true" [columns]="columnas">
+      [globalFilterFields]="['name', 'material']" responsiveLayout="scroll"
+      [tableStyle]="{ 'min-width': '50rem' }" [(selection)]="selected_farm" [rowHover]="true" dataKey="id"
+      currentPageReportTemplate="Mostrando  {first} pagina de {last}. Datos totales {totalRecords} "
+      [showCurrentPageReport]="true">
+      <ng-template pTemplate="caption">
 
-        <ng-template pTemplate="caption">
+        <div class="flex align-items-center justify-content-between">
+          <span class="p-input-icon-right">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+              placeholder="Buscar..." />
 
-          <div class="flex align-items-center justify-content-between">
-            <span class="p-input-icon-right">
-              <i class="pi pi-search"></i>
-              <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                placeholder="Buscar..." />
-
-            </span>
-
-          </div>
-
-          <div class="flex">       <button
-         type="button"
-         pButton
-         icon="pi pi-plus"
-         iconPos="right"
-         label="Crear registro"
-         (click)="showCreateRegistry()"
-         style="margin: 0.5rem"
-         class="p-button-success p-mr-2"
-         tooltipPosition="bottom"
-       ></button>
-
-       <button
-       type="button"
-       pButton
-       icon="pi pi-file"
-       iconPos="right"
-       label="Exportar"
-       (click)="dt.exportCSV()"
-       class="p-button-info ml-auto" pTooltip="Selection Only" tooltipPosition="bottom"      ></button>
+          </span>
 
         </div>
+        <div class="flex">
+          <button type="button" pButton icon="pi pi-plus" iconPos="right" label="Crear registro"
+            (click)="showCreateRegistry()" style="margin: 0.5rem"
+            class="p-button-success p-mr-2" tooltipPosition="bottom" *ngIf="product_materia && product_materia.length > 0">
+          </button>
+          <button type="button" pButton icon="pi pi-file" iconPos="right" label="Exportar"
+            (click)="exportar()" class="p-button-info ml-auto" pTooltip="Selection Only"
+            tooltipPosition="bottom"  *ngIf="selected_farm && selected_farm.length > 0"
+            >
+          </button>
+        </div>
+    </ng-template>
 
-        </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th *ngFor="let column of columnas" pSortableColumn="{{column.field}}">
+            {{column.header}} <p-sortIcon field="{{column.field}}"></p-sortIcon>
+          </th>
+          <th>Ver registros</th>
 
-        <ng-template pTemplate="header">
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product_materia>
+        <tr>
+          <td>
+            <p-tableCheckbox [value]="product_materia"></p-tableCheckbox>
+          </td>
+          <td *ngFor="let column of columnas">{{product_materia[column.field]}}</td>
+          <td>
+            <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-success mr-2"
+              [value]="product_materia" (click)="showParcel(product_materia.id,product_materia.name)"
+              (click)="registry(product_materia.id)"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="summary">
+        <div class="flex align-items-center justify-content-between">
+          Tiene en total: {{ product_materia ? product_materia.length : 0 }} Registros.
+        </div>
+      </ng-template>
+    </p-table>
 
-
-          <tr>
-            <th style="width: 3rem">
-              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-            </th>
-            <th pSortableColumn="name">
-              Nombre <p-sortIcon field="name"></p-sortIcon>
-            </th>
-            <th pSortableColumn="material">
-              material <p-sortIcon field="material"></p-sortIcon>
-            </th>
-            <th pSortableColumn="price">
-                Precio <p-sortIcon field="Precio"></p-sortIcon>
-            </th>
-
-            <th>Ver registros</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-product_materia>
-          <tr>
-            <td>
-              <p-tableCheckbox [value]="product_materia"></p-tableCheckbox>
-            </td>
-            <td>{{ product_materia.name }}</td>
-            <td>{{ product_materia.material_type }}</td>
-            <td>{{ product_materia.unit_price }}</td>
-
-            <td>
-              <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-success mr-2"
-                [value]="product_materia" (click)="showParcel(product_materia.id,product_materia.name)"
-                (click)="registry(product_materia.id)"></button>
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="summary">
-          <div class="flex align-items-center justify-content-between">
-            Tiene en total: {{ product_materia ? product_materia.length : 0 }} Registros.
-          </div>
-        </ng-template>
-      </p-table>
 
       <!-- Crear una parcela -->
       <div class="parcela">
@@ -171,74 +157,10 @@
 
       <!-- Informacion de parcelas -->
       <!--nombre_variable despues en type script -->
-      <p-dialog [(visible)]="visibleParcel" [style]="{ width: '50vw' }" [modal]="true" class="model"
-        styleClass="p-fluid" [baseZIndex]="999">
-        <br />
-        <p-table #dp [value]="produt_parcel" [rows]="10" [paginator]="true"
-          [globalFilterFields]="['id', 'width', 'length', 'crop_modality', 'create_date']" responsiveLayout="scroll"
-          [tableStyle]="{ 'min-width': '50rem' }" [(selection)]="selectedParcelas" [rowHover]="true" dataKey="id"
-          currentPageReportTemplate="Mostrando  {first} pagina de {last}. Datos totales {totalRecords} "
-          [showCurrentPageReport]="true">
-          <!-- <ng-template pTemplate="caption">
-            <div class="flex align-items-center justify-content-between">
-              <span class="p-input-icon-right">
-                <i class="pi pi-search"></i>
-                <input pInputText type="text" (input)="dp.filterGlobal($any($event.target).value, 'contains')"
-                  placeholder="Buscar..." />
-              </span>
-            </div>
-          </ng-template> -->
-          <ng-template pTemplate="header">
-            <tr>
-              <th style="width: 3rem">
-                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-              </th>
-              <th pSortableColumn="id">
-                Identificación <p-sortIcon field="Id"></p-sortIcon>
-              </th>
-              <th pSortableColumn="width">
-                Ancho <p-sortIcon field="width"></p-sortIcon>
-              </th>
-              <th pSortableColumn="length">
-                Largo <p-sortIcon field="length"></p-sortIcon>
-              </th>
-              <th pSortableColumn="crop_modality">
-                Modalidad de cultivo <p-sortIcon field="crop_modality"></p-sortIcon>
-              </th>
-              <th pSortableColumn="create_date">
-                Fecha de creación <p-sortIcon field="create_date"></p-sortIcon>
-              </th>
-              <th pSortableColumn="info">
-                Editar/Ver <p-sortIcon field="create_date"></p-sortIcon>
-              </th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-produt_parcel>
-            <tr>
-              <td>
-                <p-tableCheckbox [value]="produt_parcel"></p-tableCheckbox>
-              </td>
-              <td>{{ produt_parcel.id }}</td>
-              <td>{{ produt_parcel.name }}</td>
-              <td>{{ produt_parcel.material }}</td>
-              <td>{{ produt_parcel.price}}</td>
-              <td>
-                <button pButton pRipple icon="pi pi-info" class="p-button-rounded p-button-success mr-2"
-                  [value]="produt_parcel" (click)="showParcelEdit(produt_parcel.id,produt_parcel)"
-                ></button>
-              </td>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="summary">
-            <div class="flex align-items-center justify-content-between">
-              Tiene en total: {{ produt_parcel ? produt_parcel.length : 0 }} Parcelas.
-            </div>
-          </ng-template>
-        </p-table>
-      </p-dialog>
-      <!-- <p-dialog [(visible)]="editVisibleParcel" [style]="{ width: '50vw' }" [modal]="true" class="model"
+
+      <p-dialog [(visible)]="editVisibleParcel" [style]="{ width: '50vw' }" [modal]="true" class="model"
       styleClass="p-fluid" [baseZIndex]="999">
-      <h2 class="text-center">Edita tu parcela</h2>
+      <h2 class="text-center">Edita tu registro</h2>
           <br />
           <form (ngSubmit)="onSubmit2()">
 
@@ -246,7 +168,7 @@
 
             <div class="seedName1">
               <label for="seedName">Nombre del registro:&nbsp;</label>
-              <select id="seedName" name="seedName" [(ngModel)]="seedName" (ngModelChange)="onSeedNameChange()"
+              <select id="seedName" name="seedName" [(ngModel)]="seedName"
               [value]="specie_nameInput"
               required>
                 <option value="">Seleccione una opción</option>
@@ -291,7 +213,7 @@
             <button class="boton" type="submit">Editar</button>
           </form>
 
-      </p-dialog> -->
+      </p-dialog>
     </div>
   </p-card>
 </div>

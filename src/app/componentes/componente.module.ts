@@ -29,6 +29,7 @@ import {
   declarations: [
     ModalRegistryComponent,
     MenubaruserComponent
+
   ],
   imports: [
     CommonModule,
