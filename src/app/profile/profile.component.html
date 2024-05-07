@@ -1,0 +1,27 @@
+<menu-bar-user></menu-bar-user>
+<div class="profile">
+  <div class="profile-header">
+    <h2>Perfil de Usuario</h2>
+    <button (click)="toggleEdit('email')">Editar Email</button>
+    <button (click)="toggleEdit('password')">Editar Contraseña</button>
+  </div>
+  <div class="profile-body">
+    <div *ngIf="!isEditingEmail && !isEditingPassword">
+      <div class="info-item"><strong>Correo Electrónico:</strong> {{ userdata.email }}</div>
+      <div class="info-item"><strong>Contraseña:</strong> **********</div>
+    </div>
+    <ng-container *ngIf="isEditingEmail">
+      <div class="info-item"><strong>Correo Electrónico:</strong> <input type="email" [(ngModel)]="email"></div>
+      <button class="save-btn" (click)="saveChanges('email')">Guardar Email</button>
+    </ng-container>
+    <ng-container *ngIf="isEditingPassword">
+      <div class="info-item"><strong>Contraseña Actual:</strong> <input type="password" [(ngModel)]="currentPassword"></div>
+      <div class="info-item"><strong>Nueva Contraseña:</strong> <input type="password" [(ngModel)]="newPassword"></div>
+      <div class="info-item"><strong>Confirmar Nueva Contraseña:</strong> <input type="password" [(ngModel)]="confirmNewPassword"></div>
+    <button class="save-btn" (click)="saveChanges('password')">Guardar Contraseña</button>
+    </ng-container>
+  </div>
+</div>
+
+
+

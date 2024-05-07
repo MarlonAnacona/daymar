@@ -1,0 +1,64 @@
+/* Estilos para el contenedor del perfil */
+.profile {
+  border: 2px solid #333;
+  padding: 30px;
+  margin: 50px auto;
+  width: 500px;
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+  text-align: center; /* Alinear texto al centro */
+  line-height: 1.5; /* Altura de línea */
+  display: flex; /* Usar flexbox para centrar verticalmente */
+  flex-direction: column; /* Alinear contenido en columna */
+  justify-content: center; /* Centrar verticalmente */
+}
+
+/* Estilos para el título */
+.profile-header h2 {
+  margin-bottom: 20px; /* Margen inferior para separar del contenido */
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-body {
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.info-item {
+  margin-bottom: 15px;
+}
+
+/* Estilos para los botones */
+button {
+  padding: 8px 20px; /* Padding interno de 8px arriba/abajo y 20px izquierda/derecha */
+  margin-right: 10px; /* Margen derecho de 10px para separar los botones */
+  background-color: #007bff; /* Color de fondo azul */
+  color: white; /* Color de texto blanco */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  cursor: pointer; /* Cursor tipo puntero al pasar por encima */
+}
+
+button:hover {
+  background-color: #0056b3; /* Cambiar color de fondo al pasar por encima */
+}
+
+
+input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  width: 100%;
+}
+
+.error-msg {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}

@@ -34,6 +34,7 @@ import { DialogModule } from 'primeng/dialog';
 
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'Login', pathMatch: 'full' },
@@ -51,6 +52,11 @@ const routes: Routes = [
     path: 'Registry',
     component: RegistryComponent,
      canActivate: [AuthGuardService],
+  },
+  {
+    path: 'Profile',
+    component: ProfileComponent,
+     canActivate: [AuthGuardService],
   },]
 
 @NgModule({
@@ -58,7 +64,8 @@ const routes: Routes = [
     AppComponent,
     LoginComponent,
     DashboardComponent,
-    RegistryComponent
+    RegistryComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

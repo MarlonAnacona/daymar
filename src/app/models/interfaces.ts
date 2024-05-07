@@ -13,6 +13,25 @@ export interface user {
   password: string;
 }
 
+export interface userdata {
+  id: number;
+  email: string;
+  password: string;
+}
+
+
+export interface userdataUpdate {
+  email: string;
+}
+
+export interface userdataUpdatePassword {
+
+    current_password: string;
+    new_password: string;
+    confirm_new_password: string;
+
+}
+
 
 export interface pedidos{
   nameProv: string;

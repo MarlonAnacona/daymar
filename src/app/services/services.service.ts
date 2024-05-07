@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
-import { materiaP, materiaPcreate, user, userLogin } from '../models/interfaces';
+import { materiaP, materiaPcreate, user, userLogin, userdataUpdate, userdataUpdatePassword } from '../models/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -30,18 +30,27 @@ export class ServicesService {
     return this.Http.get(this.urlCRUD + 'users/'+ id+'/',{headers});
   }
 
+  updateUser(id:any, dataUpdate:userdataUpdate): Observable<any>{
+    const headers = new HttpHeaders().set('Authorization', 'Bearer '+ localStorage.getItem('token'));
+    return this.Http.put(this.urlCRUD + 'users/'+ id+'/',dataUpdate,{headers});
+  }
+
+  updateUserPassword(id:any, dataUpdate:userdataUpdatePassword): Observable<any>{
+    const headers = new HttpHeaders().set('Authorization', 'Bearer '+ localStorage.getItem('token'));
+    return this.Http.put(this.urlCRUD + 'users/'+ id+'/change-password',dataUpdate,{headers});
+  }
   tokenRefresh(): Observable<any> {
-    const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
    const token={
     refresh: localStorage.getItem('tokenRefresh')
    }
-    return this.Http.post(this.url+'users/api/token/refresh/',  token, {headers})
+    return this.Http.post(this.url+'users/api/token/refresh/',  token)
   }
 
   refresacarToken(){
     this.tokenRefresh().subscribe({ next: (response)=>{
 
       localStorage.setItem('token',response.access)
+      localStorage.setItem('tokenRefresh',response.refresh)
     }})
   }
 
@@ -71,11 +80,11 @@ getRegistry(id:number) :Observable<any>{
 }
 getallRegistry() :Observable<any>{
   const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
-  return this.Http.get(this.url+'raw_materials/list-raw-materials/',{headers});
+  return this.Http.get(this.url+'raw-materials/list-raw-materials/',{headers});
 }
 
 createParcela(data: materiaPcreate) {
   const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
-  return this.Http.post(this.url + 'raw_materials/create-raw-material/', data,{headers});
+  return this.Http.post(this.url + 'raw-materials/create-raw-material/', data,{headers});
 }
 }
