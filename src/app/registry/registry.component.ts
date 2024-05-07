@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { materiaP } from '../models/interfaces';
+import { materiaP, materiaPcreate, serviceProduct } from '../models/interfaces';
 import { ServicesService } from '../services/services.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { HttpClient } from '@angular/common/http';
@@ -25,6 +25,7 @@ export class RegistryComponent  implements OnInit{
   public visibleA: Boolean = false;
   public visibleParcel: Boolean = false;
   public visibleCreateFarm: Boolean = false;
+  public visibleCreateService: Boolean = false;
 
   apiLoaded!: Observable<boolean>;
   autocomplete!: google.maps.places.Autocomplete;
@@ -62,16 +63,57 @@ export class RegistryComponent  implements OnInit{
   tokenObject:any;
   materialselected:any;
   unit_selected:any;
-   translations:any = {
+  translations: any = {
     id: 'Identificación',
     material_type: 'Tipo de Material',
     name: 'Nombre',
     remaining_amount: 'Cantidad Restante',
     unit_of_measure: 'Unidad de Medida',
     unit_price: 'Precio Unitario',
-    user_register: 'Usuario Registrado'
+    user_register: 'Usuario Registrado',
+    creation_date: 'Fecha de Creación',
+    delivery_date: 'Fecha de Entrega',
+    service_price: 'Precio del Servicio',
+    client_name: 'Nombre del Cliente',
+    client_phone: 'Teléfono del Cliente',
+    service_type: 'Tipo de Servicio',
+    service_description: 'Descripción del Servicio',
+    is_active: 'Activo'
+  };
+
+  materiaPcreate:materiaPcreate={
+    name: "",
+  material_type: "",
+  remaining_amount: "", // Cambiado para coincidir con 'remaining_amount*'
+  unit_price: "", // Cambiado para coincidir con 'unit_price*'
+  unit_of_measure: "", // Cambiado para coincidir con 'unit_of_measure*'
+  user_register: 0
+  };
+  serviceProductSelect:serviceProduct = {
+    creation_date: '',
+    delivery_date: '',
+    service_price: 0,
+    client_name: '',
+    client_phone: '',
+    service_type: '',
+    service_description: '',
+    is_active: true,
+    user_register: 0
+  };
+
+  serviceProduct: serviceProduct = {
+    creation_date: '',
+    delivery_date: '',
+    service_price: 0,
+    client_name: '',
+    client_phone: '',
+    service_type: '',
+    service_description: '',
+    is_active: true,
+    user_register: 0
   };
   @ViewChild('dt') dt!: Table;
+  newRegistry=0;
 
 
 
@@ -96,13 +138,18 @@ export class RegistryComponent  implements OnInit{
       next:(response)=>{
           this.product_materia= response
           if (this.product_materia && this.product_materia.length > 0) {
-            const keys = Object.keys(this.product_materia[0]);
+            this.newRegistry=0;
 
+            const keys = Object.keys(this.product_materia[0]);
             // Crear un objeto para cada clave con 'field' y 'header' con el nombre de la clave
             this.columnas = keys.map(key => ({
               field: key,
               header: this.translations[key]
             }));
+          }
+          if(this.product_materia.length== 0){
+
+            this.newRegistry=-1
           }
       },error:(err)=>{
         this.messagerService.add({
@@ -117,12 +164,20 @@ export class RegistryComponent  implements OnInit{
 
 
   showCreateRegistry() {
+    if (this.selectedOptionServices === 'Materia_prima') {
+      this.visibleCreateFarm = true;
 
-    this.visibleCreateFarm = true;
+    } else if (this.selectedOptionServices === 'confeccion') {
+      this.visibleCreateService=true;
+
+    }
   }
 
 
+
  async  onSelectionChange() {
+  this.newRegistry=0
+
     if (this.selectedOptionServices === 'Materia_prima') {
       this.product_materia= []
       this.columnas=[]
@@ -132,7 +187,7 @@ export class RegistryComponent  implements OnInit{
       // Llamar al servicio para obtener los datos de la opción 2
       this.product_materia= []
       this.columnas=[]
-      //await this.getRegistryConfe()
+      await this.getRegistryConfe()
     } else if (this.selectedOptionServices === 'Reparacion') {
       // Llamar al servicio para obtener los datos de la opción 3
       this.product_materia= []
@@ -162,20 +217,27 @@ export class RegistryComponent  implements OnInit{
   onSubmit() {
     this.tokenObject=localStorage.getItem("token")
 
-if(this.tokenObject!=null){
-this.tokenObject=jwt_decode(this.tokenObject)
-}
-    const data = {
-      name: this.name_registry,
-      material_type: this.materialselected,
-      remaining_amount: this.remaining_amount,
-      unit_price: this.precio,
-      unit_of_measure:this.unit_selected,
-      user_register:this.tokenObject.user_id
+    if(this.tokenObject!=null){
+    this.tokenObject=jwt_decode(this.tokenObject)
+    }
 
-    };
+    if(this.selectedOptionServices === 'confeccion' || this.selectedOptionServices === 'Reparacion'){
+      this.serviceProduct.user_register=this.tokenObject.user_id
+      this.createRegistryService(this.serviceProduct)
+    }else{
+      const data = {
+        name: this.name_registry,
+        material_type: this.materialselected,
+        remaining_amount: this.remaining_amount,
+        unit_price: this.precio,
+        unit_of_measure:this.unit_selected,
+        user_register:this.tokenObject.user_id
 
-    this.createRegistry(data)
+      };
+
+      this.createRegistry(data)
+    }
+
   }
 
 
@@ -221,16 +283,16 @@ this.tokenObject=jwt_decode(this.tokenObject)
   }
 
 
-  showParcel(id:any,showparcel:any){
-    this.farmId = id
-    this.specie_nameInput=showparcel.species_name
-    this.widthInput=showparcel.width
-    this.lengthInput=showparcel.length
+  showParcelEdit( showData: any) {
+    this.editVisibleParcel = true;
+    console.log("asas")
+    if (this.selectedOptionServices === 'Materia_prima') {
 
-    this.editVisibleParcel=true
-
+      this.materiaPcreate = showData
+    } else if (this.selectedOptionServices === 'confeccion') {
+      this.serviceProductSelect= showData
+      }
   }
-
 
   registry(id: number) {
     this.services.getRegistry(id).subscribe({
@@ -245,22 +307,16 @@ this.tokenObject=jwt_decode(this.tokenObject)
   }
 
 
-  showParcelEdit(id:any,showparcel:any){
-    this.farmId = id
-    this.specie_nameInput=showparcel.species_name
-    this.widthInput=showparcel.width
-    this.lengthInput=showparcel.length
 
-    this.editVisibleParcel=true
-
-  }
 
 
   async getRegistryConfe(){
-    this.product_materia= this.services.getallRegistry().subscribe({
+    this.product_materia= this.services.getallRegistryService().subscribe({
       next:(response)=>{
           this.product_materia= response
           if (this.product_materia && this.product_materia.length > 0) {
+            this.newRegistry=0
+
             const keys = Object.keys(this.product_materia[0]);
 
             // Crear un objeto para cada clave con 'field' y 'header' con el nombre de la clave
@@ -268,6 +324,10 @@ this.tokenObject=jwt_decode(this.tokenObject)
               field: key,
               header: this.translations[key]
             }));
+
+          }
+          if(this.product_materia.length == 0){
+            this.newRegistry=-1
           }
       },error:(err)=>{
         this.messagerService.add({
@@ -302,4 +362,32 @@ this.tokenObject=jwt_decode(this.tokenObject)
     })
   }
 
+
+  createRegistryService(data: any) {
+    this.services.createService(data).subscribe({
+      next: (response) => {
+        this.messagerService.add({
+          severity: 'success',
+          summary: 'Movimiento exitoso',
+          detail: 'Se logró hacer el registro ',
+        });
+
+      },
+      error: (err) => {
+        this.messagerService.add({
+          severity: 'error',
+          summary: 'Hubo un error ',
+          detail: 'Registro no éxitoso',
+        });
+      },
+    });
+  }
+
+  onSubmit2MateriaPrima(){
+
+  }
+
+  onSubmit2Service(){
+
+  }
 }

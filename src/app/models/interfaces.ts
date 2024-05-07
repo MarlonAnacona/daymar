@@ -62,3 +62,17 @@ export interface materiaPcreate {
   unit_of_measure: string; // Cambiado para coincidir con 'unit_of_measure*'
   user_register: number;
 }
+
+
+
+export interface serviceProduct{
+  creation_date: string;
+  delivery_date: string;
+  service_price: number;
+  client_name: string;
+  client_phone: string;
+  service_type: string;
+  service_description: string;
+  is_active: true;
+  user_register: 0
+}

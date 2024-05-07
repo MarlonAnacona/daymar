@@ -4,8 +4,7 @@
     <select [(ngModel)]="selectedOptionServices" (change)="onSelectionChange()">
 
       <option value="Materia_prima">Materia prima</option>
-      <option value="confeccion">Servicio de confección</option>
-      <option value="Reparacion">Reparación</option>
+      <option value="confeccion">Servicios</option>
     </select>
   </div>
 
@@ -39,7 +38,7 @@
         <div class="flex">
           <button type="button" pButton icon="pi pi-plus" iconPos="right" label="Crear registro"
             (click)="showCreateRegistry()" style="margin: 0.5rem"
-            class="p-button-success p-mr-2" tooltipPosition="bottom" *ngIf="product_materia && product_materia.length > 0">
+            class="p-button-success p-mr-2" tooltipPosition="bottom" *ngIf="(product_materia && product_materia.length > 0) ||newRegistry==-1">
           </button>
           <button type="button" pButton icon="pi pi-file" iconPos="right" label="Exportar"
             (click)="exportar()" class="p-button-info ml-auto" pTooltip="Selection Only"
@@ -69,7 +68,7 @@
           <td *ngFor="let column of columnas">{{product_materia[column.field]}}</td>
           <td>
             <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-success mr-2"
-              [value]="product_materia" (click)="showParcel(product_materia.id,product_materia.name)"
+              [value]="product_materia" (click)="showParcelEdit(product_materia)"
               (click)="registry(product_materia.id)"></button>
           </td>
         </tr>
@@ -154,6 +153,86 @@
         </p-dialog>
       </div>
 
+      <div class="parcela">
+        <p-dialog [(visible)]="visibleCreateService" [style]="{ width: '50vw' }" [modal]="true" class="model"
+          styleClass="p-fluid" [baseZIndex]="999">
+          <h2 class="text-center">Crea tus registros</h2>
+          <br />
+          <form (ngSubmit)="onSubmit()">
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" name="creation_date" id="creation_date" type="date" [(ngModel)]="serviceProduct.creation_date"
+                  required />
+                <label for="creation_date">Fecha de Creación</label>
+              </span>
+            </div>
+            <br>
+
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" name="delivery_date" id="delivery_date" type="date" [(ngModel)]="serviceProduct.delivery_date"
+                  required />
+                <label for="delivery_date">Fecha de Entrega</label>
+              </span>
+            </div>
+            <br>
+
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" name="service_price" id="service_price" type="number" [(ngModel)]="serviceProduct.service_price"
+                  required />
+                <label for="service_price">Precio del Servicio</label>
+              </span>
+            </div>
+            <br>
+
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" name="client_name" id="client_name" type="text" [(ngModel)]="serviceProduct.client_name"
+                  required />
+                <label for="client_name">Nombre del Cliente</label>
+              </span>
+            </div>
+            <br>
+
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" name="client_phone" id="client_phone" type="text" [(ngModel)]="serviceProduct.client_phone"
+                  required />
+                <label for="client_phone">Teléfono del Cliente</label>
+              </span>
+            </div>
+            <br>
+
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <select class="col-12" name="service_type" id="service_type" [(ngModel)]="serviceProduct.service_type" required>
+                  <option value="Confeccion">Confección</option>
+                  <option value="Reparacion">Reparación</option>
+                </select>
+                <label for="service_type">Tipo de Servicio</label>
+              </span>
+            </div>
+            <br>
+
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" name="service_description" id="service_description" type="text"
+                  [(ngModel)]="serviceProduct.service_description" required />
+                <label for="service_description">Descripción del Servicio</label>
+              </span>
+            </div>
+            <br>
+
+
+            <br>
+            <br>
+
+            <button class="btn btn-primary btn-block" type="submit">Enviar</button>
+          </form>
+        </p-dialog>
+      </div>
+
 
       <!-- Informacion de parcelas -->
       <!--nombre_variable despues en type script -->
@@ -162,50 +241,68 @@
       styleClass="p-fluid" [baseZIndex]="999">
       <h2 class="text-center">Edita tu registro</h2>
           <br />
-          <form (ngSubmit)="onSubmit2()">
-
+          <form *ngIf="selectedOptionServices === 'Materia_prima'" (ngSubmit)="onSubmit2MateriaPrima()">
             <br>
 
             <div class="seedName1">
               <label for="seedName">Nombre del registro:&nbsp;</label>
-              <select id="seedName" name="seedName" [(ngModel)]="seedName"
-              [value]="specie_nameInput"
-              required>
-                <option value="">Seleccione una opción</option>
-                <option *ngFor="let option of seedOptions" [value]="option.species_name">{{ option.species_name }}
-                </option>
-              </select>
+              <input id="seedName" name="seedName" type="text" [(ngModel)]="product_materia.name" required>
             </div>
 
             <br>
+
             <div class="texInformation">
-              <div class="text-center" *ngIf="selectedOption">
-                <h3>Información:</h3>
-                <p>Descripción: {{ selectedOption.description }}</p>
-                <p>CBD: {{ selectedOption.cbd }} %</p>
-                <p>THC: {{ selectedOption.thc }} %</p>
-              </div>
+              <!-- Aquí puedes mostrar información adicional si lo necesitas -->
             </div>
 
             <div class="width1">
-              <label for="width">Precio:&nbsp;</label>
-              <input type="number" id="widthInput" name="widthInput" [(ngModel)]="widthInput" [value]="widthInput" required>
+              <label for="unit_price">Precio por unidad:&nbsp;</label>
+              <input type="number" id="unit_price" name="unit_price" [(ngModel)]="materiaPcreate.unit_price" required>
             </div>
             <br>
 
             <div class="length1">
-              <label for="length">Largo:&nbsp;</label>
-              <input type="number" id="lengthInput" name="lengthInput" [value]="lengthInput" [(ngModel)]="lengthInput" required>
+              <label for="remaining_amount">Cantidad restante:&nbsp;</label>
+              <input type="text" id="remaining_amount" name="remaining_amount" [(ngModel)]="materiaPcreate.remaining_amount" required>
             </div>
             <br>
 
             <div class="cropModality1">
-              <label for="cropModality">Modalidad de cultivo:&nbsp;</label>
+              <label for="material_type">Tipo de material:&nbsp;</label>
+              <select id="material_type" name="material_type" [(ngModel)]="materiaPcreate.material_type" required>
+                <!-- Aquí puedes agregar las opciones de tipo de material -->
+              </select>
+            </div>
 
-              <select id="cropModality" name="cropModality" [(ngModel)]="cropModality" [value]="crop_modalityInput" required>
-                <option class="dropdown-item" value="">Seleccione una opción</option>
-                <option class="dropdown-item" value="Indoor">Interior</option>
-                <option class="dropdown-item" value="Outdoor">Exterior</option>
+            <br>
+            <button class="boton" type="submit">Editar</button>
+          </form>
+
+          <form *ngIf="selectedOptionServices === 'confeccion'" (ngSubmit)="onSubmit2Service()">
+            <br>
+
+            <div class="seedName1">
+              <label for="service_description">Descripción del servicio:&nbsp;</label>
+              <input id="service_description" name="service_description" type="text" [(ngModel)]="serviceProductSelect.service_description" required>
+            </div>
+
+            <br>
+
+            <div class="texInformation">
+              <!-- Aquí puedes mostrar información adicional si lo necesitas -->
+            </div>
+
+            <div class="width1">
+              <label for="service_price">Precio del servicio:&nbsp;</label>
+              <input type="number" id="service_price" name="service_price" [(ngModel)]="serviceProductSelect.service_price" required>
+            </div>
+            <br>
+
+            <div class="length1">
+              <label for="service_type">Tipo de servicio:&nbsp;</label>
+              <select id="service_type" name="service_type" [(ngModel)]="serviceProductSelect.service_type" required>
+                <option value="Confeccion">Confección</option>
+                <option value="Reparacion">Reparación</option>
               </select>
             </div>
 
@@ -214,6 +311,7 @@
           </form>
 
       </p-dialog>
+
     </div>
   </p-card>
 </div>

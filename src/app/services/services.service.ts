@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
-import { materiaP, materiaPcreate, user, userLogin, userdataUpdate, userdataUpdatePassword } from '../models/interfaces';
+import { materiaP, materiaPcreate, serviceProduct, user, userLogin, userdataUpdate, userdataUpdatePassword } from '../models/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -87,4 +87,14 @@ createParcela(data: materiaPcreate) {
   const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
   return this.Http.post(this.url + 'raw-materials/create-raw-material/', data,{headers});
 }
+createService(data: serviceProduct) {
+  const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
+  return this.Http.post(this.url + 'service/create-service/', data,{headers});
+}
+
+getallRegistryService() :Observable<any>{
+  const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
+  return this.Http.get(this.url+'service/list-service/',{headers});
+}
+
 }
