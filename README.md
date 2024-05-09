@@ -5,7 +5,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## Install and Development server
 
 Run:
-    Npm install -legacy-peer-deps
+
+    npm install -legacy-peer-deps
+    
     npm run start
 
     
