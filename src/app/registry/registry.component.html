@@ -1,4 +1,5 @@
 <menu-bar-user></menu-bar-user>
+<p-toast></p-toast>
 <div id="Principal" style="display: flexbox">
   <div id="textoInicial" style="text-align: center">Registro de:
     <select [(ngModel)]="selectedOptionServices" (change)="onSelectionChange()">
@@ -69,8 +70,13 @@
           <td>
             <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-success mr-2"
               [value]="product_materia" (click)="showParcelEdit(product_materia)"
-              (click)="registry(product_materia.id)"></button>
+              ></button>
           </td>
+          <td>
+            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product_materia)"></button>
+
+          </td>
+
         </tr>
       </ng-template>
       <ng-template pTemplate="summary">
@@ -159,13 +165,7 @@
           <h2 class="text-center">Crea tus registros</h2>
           <br />
           <form (ngSubmit)="onSubmit()">
-            <div class="field col-11 flex justify-content-center">
-              <span class="p-float-label col-11 flex justify-content-center">
-                <input class="col-12" name="creation_date" id="creation_date" type="date" [(ngModel)]="serviceProduct.creation_date"
-                  required />
-                <label for="creation_date">Fecha de Creación</label>
-              </span>
-            </div>
+
             <br>
 
             <div class="field col-11 flex justify-content-center">
@@ -242,43 +242,46 @@
       <h2 class="text-center">Edita tu registro</h2>
           <br />
           <form *ngIf="selectedOptionServices === 'Materia_prima'" (ngSubmit)="onSubmit2MateriaPrima()">
-            <br>
 
+            <br>
             <div class="seedName1">
-              <label for="seedName">Nombre del registro:&nbsp;</label>
-              <input id="seedName" name="seedName" type="text" [(ngModel)]="product_materia.name" required>
-            </div>
+              <label class="label" for="seedName">Nombre del registro:</label>
+              <input  id="seedName" name="seedName" type="text" [(ngModel)]="materiaPcreate.name" required>
+          </div>
+          <br>
 
-            <br>
+          <div class="width1">
+              <label class="label" for="unit_price">Precio por unidad:</label>
+              <input  type="number" id="unit_price" name="unit_price" [(ngModel)]="materiaPcreate.unit_price" required>
+          </div>
+          <br>
 
-            <div class="texInformation">
-              <!-- Aquí puedes mostrar información adicional si lo necesitas -->
-            </div>
-
-            <div class="width1">
-              <label for="unit_price">Precio por unidad:&nbsp;</label>
-              <input type="number" id="unit_price" name="unit_price" [(ngModel)]="materiaPcreate.unit_price" required>
-            </div>
-            <br>
-
-            <div class="length1">
-              <label for="remaining_amount">Cantidad restante:&nbsp;</label>
+          <div class="length1">
+              <label class="label" for="remaining_amount">Cantidad restante:</label>
               <input type="text" id="remaining_amount" name="remaining_amount" [(ngModel)]="materiaPcreate.remaining_amount" required>
-            </div>
-            <br>
+          </div>
+          <br>
 
-            <div class="cropModality1">
-              <label for="material_type">Tipo de material:&nbsp;</label>
-              <select id="material_type" name="material_type" [(ngModel)]="materiaPcreate.material_type" required>
-                <!-- Aquí puedes agregar las opciones de tipo de material -->
+          <div class="cropModality1">
+              <label class="label" for="material_type">Tipo de material:</label>
+              <select  id="material_type" name="material_type" [(ngModel)]="materiaPcreate.material_type" required>
+                  <option *ngFor="let type of material_type" [value]="type">{{ type }}</option>
               </select>
-            </div>
+          </div>
+          <br>
 
-            <br>
+          <div class="parcela">
+              <label class="label" for="unit_of_measure">Unidad de medida:</label>
+              <select  id="unit_of_measure" name="unit_of_measure" [(ngModel)]="materiaPcreate.unit_of_measure" required>
+                  <option *ngFor="let measure of unit_of_measure" [value]="measure">{{ measure }}</option>
+              </select>
+          </div>
+<br>
             <button class="boton" type="submit">Editar</button>
           </form>
 
           <form *ngIf="selectedOptionServices === 'confeccion'" (ngSubmit)="onSubmit2Service()">
+
             <br>
 
             <div class="seedName1">
@@ -307,6 +310,37 @@
             </div>
 
             <br>
+
+            <div class="parcela">
+              <label class="label" for="creation_date">Fecha de creación:</label>
+              <input  readonly type="date" id="creation_date" name="creation_date" [(ngModel)]="serviceProductSelect.creation_date" required>
+            </div>
+            <br>
+
+            <div class="parcela">
+              <label class="label" for="delivery_date">Fecha de entrega:</label>
+              <input  type="date" id="delivery_date" name="delivery_date" [(ngModel)]="serviceProductSelect.delivery_date" required>
+            </div>
+            <br>
+
+            <div class="parcela">
+              <label class="label" for="client_name">Nombre del cliente:</label>
+              <input  type="text" id="client_name" name="client_name" [(ngModel)]="serviceProductSelect.client_name" required>
+            </div>
+            <br>
+
+            <div class="parcela">
+              <label class="label" for="client_phone">Teléfono del cliente:</label>
+              <input  type="tel" id="client_phone" name="client_phone" [(ngModel)]="serviceProductSelect.client_phone" required>
+            </div>
+            <br>
+
+            <div class="parcela">
+              <label class="label" for="is_active">Activo:</label>
+              <input class="value" type="checkbox" id="is_active" name="is_active" [(ngModel)]="serviceProductSelect.is_active">
+            </div>
+            <br>
+
             <button class="boton" type="submit">Editar</button>
           </form>
 
@@ -315,3 +349,4 @@
     </div>
   </p-card>
 </div>
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

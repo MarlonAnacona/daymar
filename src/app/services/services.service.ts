@@ -97,4 +97,27 @@ getallRegistryService() :Observable<any>{
   return this.Http.get(this.url+'service/list-service/',{headers});
 }
 
+updateService(id:any, dataUpdate:any): Observable<any>{
+  const headers = new HttpHeaders().set('Authorization', 'Bearer '+ localStorage.getItem('token'));
+  return this.Http.put(this.urlCRUD +'service/update-service/'+ id+'/',dataUpdate,{headers});
+}
+
+
+
+updateMaterials(id:any, dataUpdate:any): Observable<any>{
+  const headers = new HttpHeaders().set('Authorization', 'Bearer '+ localStorage.getItem('token'));
+  return this.Http.put(this.urlCRUD + 'raw-materials/get-update-raw-material/'+ id+'/',dataUpdate,{headers});
+}
+
+deleteMaterials(id:any,data:any){
+  const headers = new HttpHeaders().set('Authorization', 'Bearer '+ localStorage.getItem('token'));
+  return this.Http.post(this.urlCRUD + 'raw-materials/delete-raw-material/'+ id+'/',data,{headers});
+
+}
+deleteServices(id:any,data:any){
+  const headers = new HttpHeaders().set('Authorization', 'Bearer '+ localStorage.getItem('token'));
+  return this.Http.post(this.urlCRUD + 'service/delete-service/'+ id+'/',data,{headers});
+
+}
+
 }

@@ -11,7 +11,9 @@ import { Table } from 'primeng/table';
 @Component({
   selector: 'app-registry',
   templateUrl: './registry.component.html',
-  styleUrls: ['./registry.component.css']
+  styleUrls: ['./registry.component.css'],
+  providers: [MessageService,ConfirmationService]
+
 })
 
 
@@ -26,6 +28,7 @@ export class RegistryComponent  implements OnInit{
   public visibleParcel: Boolean = false;
   public visibleCreateFarm: Boolean = false;
   public visibleCreateService: Boolean = false;
+  serviceProductSelectOriginal:any;
 
   apiLoaded!: Observable<boolean>;
   autocomplete!: google.maps.places.Autocomplete;
@@ -115,7 +118,9 @@ export class RegistryComponent  implements OnInit{
   @ViewChild('dt') dt!: Table;
   newRegistry=0;
 
+  materiaPcreateOriginal: any; // Debes mantener una copia de los datos originales
 
+  formChanged: boolean = false;
 
   constructor(private services: ServicesService,
     private messagerService: MessageService,
@@ -152,6 +157,8 @@ export class RegistryComponent  implements OnInit{
             this.newRegistry=-1
           }
       },error:(err)=>{
+        this.product_materia= []
+        this.columnas=[]
         this.messagerService.add({
           severity: 'error',
           summary: 'Hubo un error ',
@@ -223,6 +230,8 @@ export class RegistryComponent  implements OnInit{
 
     if(this.selectedOptionServices === 'confeccion' || this.selectedOptionServices === 'Reparacion'){
       this.serviceProduct.user_register=this.tokenObject.user_id
+      this.serviceProduct.creation_date= new Date().toISOString().substring(0,10);
+
       this.createRegistryService(this.serviceProduct)
     }else{
       const data = {
@@ -270,6 +279,8 @@ this.tokenObject=jwt_decode(this.tokenObject)
           summary: 'Movimiento exitoso',
           detail: 'Se logró hacer el registro ',
         });
+        this.visibleCreateFarm = false;
+        this.onSelectionChange()
 
       },
       error: (err) => {
@@ -285,25 +296,14 @@ this.tokenObject=jwt_decode(this.tokenObject)
 
   showParcelEdit( showData: any) {
     this.editVisibleParcel = true;
-    console.log("asas")
     if (this.selectedOptionServices === 'Materia_prima') {
 
-      this.materiaPcreate = showData
+      this.materiaPcreate = {...showData}
+
     } else if (this.selectedOptionServices === 'confeccion') {
-      this.serviceProductSelect= showData
+      this.serviceProductSelect= {...showData}
+
       }
-  }
-
-  registry(id: number) {
-    this.services.getRegistry(id).subscribe({
-      next: (data) => {
-        this.produt_parcel = data
-
-
-      }, error: (err) => {
-        console.log(err)
-      }
-    })
   }
 
 
@@ -311,6 +311,7 @@ this.tokenObject=jwt_decode(this.tokenObject)
 
 
   async getRegistryConfe(){
+
     this.product_materia= this.services.getallRegistryService().subscribe({
       next:(response)=>{
           this.product_materia= response
@@ -330,6 +331,8 @@ this.tokenObject=jwt_decode(this.tokenObject)
             this.newRegistry=-1
           }
       },error:(err)=>{
+        this.product_materia= []
+        this.columnas=[]
         this.messagerService.add({
           severity: 'error',
           summary: 'Hubo un error ',
@@ -363,7 +366,7 @@ this.tokenObject=jwt_decode(this.tokenObject)
   }
 
 
-  createRegistryService(data: any) {
+ async  createRegistryService(data: any) {
     this.services.createService(data).subscribe({
       next: (response) => {
         this.messagerService.add({
@@ -371,7 +374,8 @@ this.tokenObject=jwt_decode(this.tokenObject)
           summary: 'Movimiento exitoso',
           detail: 'Se logró hacer el registro ',
         });
-
+        this.visibleCreateService=false;
+        this.onSelectionChange()
       },
       error: (err) => {
         this.messagerService.add({
@@ -384,10 +388,118 @@ this.tokenObject=jwt_decode(this.tokenObject)
   }
 
   onSubmit2MateriaPrima(){
+    if ('id' in this.materiaPcreate) {
+
+      this.services.updateMaterials(this.materiaPcreate.id,this.materiaPcreate).subscribe({
+        next: (response) => {
+          this.messagerService.add({
+            severity: 'success',
+            summary: 'Movimiento exitoso',
+            detail: 'Se logró hacer el registro ',
+          });
+          this.editVisibleParcel = true;
+
+          this.onSelectionChange()
+
+        },
+        error: (err) => {
+          this.messagerService.add({
+            severity: 'error',
+            summary: 'Hubo un error ',
+            detail: 'Registro no éxitoso',
+          });
+        },
+      });
+    }
 
   }
 
   onSubmit2Service(){
+    if ('id' in this.serviceProductSelect) {
+    this.services.updateService(this.serviceProductSelect.id,this.serviceProductSelect).subscribe({
+      next: (response) => {
+        this.messagerService.add({
+          severity: 'success',
+          summary: 'Movimiento exitoso',
+          detail: 'Se logró hacer el registro ',
+        });
+        this.editVisibleParcel = true;
+
+        this.onSelectionChange()
+
+      },
+      error: (err) => {
+        this.messagerService.add({
+          severity: 'error',
+          summary: 'Hubo un error ',
+          detail: 'Registro no éxitoso',
+        });
+      },
+    });
+  }
+}
+
+  isFormDirty(): boolean {
+    return JSON.stringify(this.materiaPcreate) !== JSON.stringify(this.materiaPcreateOriginal);
+  }
+
+
+  deleteProduct(product: any) {
+    this.confirmationService.confirm({
+        message: '¿Estas seguro de eliminar este elemento?' ,
+        header: 'Confirmar',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          this.deleteMateria(product.id,product)
+        }
+    });
+}
+
+  deleteMateria(id:any,product:any){
+
+    if (this.selectedOptionServices === 'Materia_prima') {
+      this.services.deleteMaterials(id,product).subscribe({
+        next: (response) => {
+          this.messagerService.add({
+            severity: 'success',
+            summary: 'Movimiento exitoso',
+            detail: 'Se logró eliminar el dato',
+          });
+
+          this.onSelectionChange()
+
+        },
+        error: (err) => {
+          this.messagerService.add({
+            severity: 'error',
+            summary: 'Hubo un error ',
+            detail: 'Registro no éxitoso',
+          });
+        },
+      });
+
+    }else{
+      this.services.deleteServices(id,product).subscribe({
+        next: (response) => {
+          this.messagerService.add({
+            severity: 'success',
+            summary: 'Movimiento exitoso',
+            detail: 'Se logró hacer el registro ',
+          });
+
+          this.onSelectionChange()
+
+        },
+        error: (err) => {
+          this.messagerService.add({
+            severity: 'error',
+            summary: 'Hubo un error ',
+            detail: 'Registro no éxitoso',
+          });
+        },
+      });
+
+    }
 
   }
 }
