@@ -17,8 +17,13 @@ export interface userdata {
   id: number;
   email: string;
   password: string;
-}
 
+}
+export interface userdataRegistry {
+  email: string;
+  password: string;
+ rol: string
+}
 
 export interface userdataUpdate {
   email: string;
@@ -75,4 +80,29 @@ export interface serviceProduct{
   service_description: string;
   is_active: true;
   user_register: 0
+}
+
+export interface servicesProcces{
+ service_id: number;
+user_id:number
+}
+export interface servicesProccesGet{
+  process_id:number;
+ service_id: number;
+user_id:number
+}
+
+
+
+export interface  processRegister{
+  proccess_price: number;
+  process_name: string;
+  process_description:string;
+  process_user: number;
+}
+
+export interface serviceRawMaterial{
+  raw_material_amount: string;
+  raw_material_id:number;
+  service_id:number;
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
-import { materiaP, materiaPcreate, serviceProduct, user, userLogin, userdataUpdate, userdataUpdatePassword } from '../models/interfaces';
+import { materiaP, materiaPcreate, serviceProduct, user, userLogin, userdataUpdate, userdataUpdatePassword, processRegister, servicesProcces, userdataRegistry, serviceRawMaterial } from '../models/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class ServicesService {
     return this.Http.post(this.urlCRUD + 'users/api/token/', data);
   }
 
-  userRegister(data: user) {
+  userRegister(data: userdataRegistry) {
     return this.Http.post(this.urlCRUD + 'users/create/', data);
   }
 
@@ -118,6 +118,38 @@ deleteServices(id:any,data:any){
   const headers = new HttpHeaders().set('Authorization', 'Bearer '+ localStorage.getItem('token'));
   return this.Http.post(this.urlCRUD + 'service/delete-service/'+ id+'/',data,{headers});
 
+}
+
+
+createServicesProcess(data: servicesProcces) {
+  const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
+  return this.Http.post(this.url + 'service_process/register/', data,{headers});
+}
+
+getProccesService() {
+  const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
+  return this.Http.post(this.url + 'service_process/list/',{headers});
+}
+
+createProcces(data: processRegister) {
+  const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
+  return this.Http.post(this.url + 'process/register/', data,{headers});
+}
+
+getProcces() {
+  const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
+  return this.Http.post(this.url + 'process/list/',{headers});
+}
+
+
+service_raw_Material(data: serviceRawMaterial) {
+  const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
+  return this.Http.post(this.url + 'service_raw_material/register/', data,{headers});
+}
+
+getservice_raw_Material() {
+  const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
+  return this.Http.get(this.url + 'service_raw_material/list/',{headers});
 }
 
 }

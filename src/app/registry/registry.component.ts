@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { materiaP, materiaPcreate, serviceProduct } from '../models/interfaces';
+import { materiaP, materiaPcreate, processRegister, serviceProduct, serviceRawMaterial, servicesProcces, userdataRegistry } from '../models/interfaces';
 import { ServicesService } from '../services/services.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { HttpClient } from '@angular/common/http';
@@ -28,6 +28,7 @@ export class RegistryComponent  implements OnInit{
   public visibleParcel: Boolean = false;
   public visibleCreateFarm: Boolean = false;
   public visibleCreateService: Boolean = false;
+  public visibleCreateUser: Boolean = false;
   serviceProductSelectOriginal:any;
 
   apiLoaded!: Observable<boolean>;
@@ -115,12 +116,22 @@ export class RegistryComponent  implements OnInit{
     is_active: true,
     user_register: 0
   };
+
+  userRegistry: userdataRegistry={
+    email:'',
+    password:'',
+    rol:''
+  }
   @ViewChild('dt') dt!: Table;
   newRegistry=0;
 
   materiaPcreateOriginal: any; // Debes mantener una copia de los datos originales
 
   formChanged: boolean = false;
+  serviceRawMaterialList:any;
+  proccesServiceList:any;
+  proccesList:any;
+
 
   constructor(private services: ServicesService,
     private messagerService: MessageService,
@@ -195,11 +206,10 @@ export class RegistryComponent  implements OnInit{
       this.product_materia= []
       this.columnas=[]
       await this.getRegistryConfe()
-    } else if (this.selectedOptionServices === 'Reparacion') {
+    } else if (this.selectedOptionServices === 'Usuarios') {
       // Llamar al servicio para obtener los datos de la opción 3
       this.product_materia= []
       this.columnas=[]
-     // await this.getRegistryRepair()
 
     }
   }
@@ -502,4 +512,114 @@ this.tokenObject=jwt_decode(this.tokenObject)
     }
 
   }
+
+
+
+
+  async createServicesProcess(data: servicesProcces) {
+    this.services.createServicesProcess(data).subscribe({
+      next: (response) => {
+        this.messagerService.add({
+          severity: 'success',
+          summary: 'Movimiento exitoso',
+          detail: 'Se logró hacer el registro del proceso de servicio',
+        });
+        this.onSelectionChange();
+      },
+      error: (err) => {
+        this.messagerService.add({
+          severity: 'error',
+          summary: 'Hubo un error',
+          detail: 'Registro no exitoso del proceso de servicio',
+        });
+      },
+    });
+  }
+
+  async getProccesService() {
+    this.services.getProccesService().subscribe({
+      next: (response) => {
+        this.proccesServiceList = response;
+      },
+      error: (err) => {
+        this.messagerService.add({
+          severity: 'error',
+          summary: 'Hubo un error',
+          detail: 'No se pudo obtener la lista de procesos de servicio',
+        });
+      },
+    });
+  }
+
+  async createProcces(data: processRegister) {
+    this.services.createProcces(data).subscribe({
+      next: (response) => {
+        this.messagerService.add({
+          severity: 'success',
+          summary: 'Movimiento exitoso',
+          detail: 'Se logró hacer el registro del proceso',
+        });
+        this.onSelectionChange();
+      },
+      error: (err) => {
+        this.messagerService.add({
+          severity: 'error',
+          summary: 'Hubo un error',
+          detail: 'Registro no exitoso del proceso',
+        });
+      },
+    });
+  }
+
+  async getProcces() {
+    this.services.getProcces().subscribe({
+      next: (response) => {
+        this.proccesList = response;
+      },
+      error: (err) => {
+        this.messagerService.add({
+          severity: 'error',
+          summary: 'Hubo un error',
+          detail: 'No se pudo obtener la lista de procesos',
+        });
+      },
+    });
+  }
+
+  async serviceRawMaterial(data: serviceRawMaterial) {
+    this.services.service_raw_Material(data).subscribe({
+      next: (response) => {
+        this.messagerService.add({
+          severity: 'success',
+          summary: 'Movimiento exitoso',
+          detail: 'Se logró hacer el registro del material crudo del servicio',
+        });
+        this.onSelectionChange();
+      },
+      error: (err) => {
+        this.messagerService.add({
+          severity: 'error',
+          summary: 'Hubo un error',
+          detail: 'Registro no exitoso del material crudo del servicio',
+        });
+      },
+    });
+  }
+
+  async getServiceRawMaterial() {
+    this.services.getservice_raw_Material().subscribe({
+      next: (response) => {
+        this.serviceRawMaterialList = response;
+      },
+      error: (err) => {
+        this.messagerService.add({
+          severity: 'error',
+          summary: 'Hubo un error',
+          detail: 'No se pudo obtener la lista de materiales crudos del servicio',
+        });
+      },
+    });
+  }
+
+
 }

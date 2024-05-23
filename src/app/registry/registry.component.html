@@ -6,6 +6,7 @@
 
       <option value="Materia_prima">Materia prima</option>
       <option value="confeccion">Servicios</option>
+      <option value="Usuarios">Usuarios</option>
     </select>
   </div>
 
@@ -234,8 +235,52 @@
       </div>
 
 
-      <!-- Informacion de parcelas -->
-      <!--nombre_variable despues en type script -->
+      <div class="parcela">
+        <p-dialog [(visible)]="visibleCreateUser" [style]="{ width: '50vw' }" [modal]="true" class="model"
+          styleClass="p-fluid" [baseZIndex]="999">
+          <h2 class="text-center">Crea usuarios de trabajadores</h2>
+          <br />
+          <form (ngSubmit)="onSubmit()">
+
+            <br>
+
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" name="email" id="email" type="text" [(ngModel)]="serviceProduct.delivery_date"
+                  required />
+                <label for="email">email</label>
+              </span>
+            </div>
+            <br>
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" name="Contraseña" id="Contraseña" type="text" [(ngModel)]="serviceProduct.delivery_date"
+                  required />
+                <label for="Contraseña">Contraseña</label>
+              </span>
+            </div>
+            <br>
+
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <select class="col-12" name="service_type" id="service_type" [(ngModel)]="serviceProduct.service_type" required>
+                  <option value="Confeccion">Adminitrador</option>
+                  <option value="Reparacion">Operador</option>
+                </select>
+                <label for="service_type">Rol de usuario</label>
+              </span>
+            </div>
+            <br>
+
+
+            <br>
+            <br>
+
+            <button class="btn btn-primary btn-block" type="submit">Enviar</button>
+          </form>
+        </p-dialog>
+      </div>
+
 
       <p-dialog [(visible)]="editVisibleParcel" [style]="{ width: '50vw' }" [modal]="true" class="model"
       styleClass="p-fluid" [baseZIndex]="999">
