@@ -46,7 +46,12 @@
             (click)="exportar()" class="p-button-info ml-auto" pTooltip="Selection Only"
             tooltipPosition="bottom"  *ngIf="selected_farm && selected_farm.length > 0"
             >
+
           </button>
+          <button type="button" pButton icon="pi pi-plus" iconPos="right" label="Crear procesos"
+          (click)="showprocessRegistry()" style="margin: 0.5rem"
+          class="p-button-success p-mr-2" tooltipPosition="bottom" *ngIf="(product_materia && product_materia.length > 0 && selectedOptionServices=='confeccion') ||newRegistry==-1">
+        </button>
         </div>
     </ng-template>
 
@@ -60,6 +65,10 @@
           </th>
           <th>Ver registros</th>
 
+          <th>Eliminar</th>
+
+          <th *ngIf="selectedOptionServices=='confeccion'"
+          >Agregar procesos</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-product_materia>
@@ -75,9 +84,11 @@
           </td>
           <td>
             <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product_materia)"></button>
-
           </td>
-
+          <td *ngIf="selectedOptionServices=='confeccion'">
+            <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success mr-2" (click)="addedprocess(product_materia)">
+            </button>
+          </td>
         </tr>
       </ng-template>
       <ng-template pTemplate="summary">
@@ -180,7 +191,7 @@
 
             <div class="field col-11 flex justify-content-center">
               <span class="p-float-label col-11 flex justify-content-center">
-                <input class="col-12" name="service_price" id="service_price" type="number" [(ngModel)]="serviceProduct.service_price"
+                <input class="col-12" name="service_price" id="service_price" type="number" [(ngModel)]="serviceProduct.service_unit_price"
                   required />
                 <label for="service_price">Precio del Servicio</label>
               </span>
@@ -221,6 +232,15 @@
                 <input class="col-12" name="service_description" id="service_description" type="text"
                   [(ngModel)]="serviceProduct.service_description" required />
                 <label for="service_description">Descripción del Servicio</label>
+              </span>
+            </div>
+            <br>
+
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" name="service_description" id="service_description" type="number"
+                  [(ngModel)]="serviceProduct.amount_service" required />
+                <label for="service_description">Cantidad</label>
               </span>
             </div>
             <br>
@@ -282,6 +302,81 @@
       </div>
 
 
+      <div class="parcela">
+        <p-dialog [(visible)]="visibleProcessCreate" [style]="{ width: '50vw' }" [modal]="true" class="model"
+          styleClass="p-fluid" [baseZIndex]="999">
+          <h2 class="text-center">Crear procesos</h2>
+          <br />
+          <form (ngSubmit)="createProcessButton()">
+
+            <br>
+
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" name="proccess_price" id="proccess_price" type="number" [(ngModel)]="processCreate.process_price"
+                  required />
+                <label for="proccess_price">Costo proceso</label>
+              </span>
+            </div>
+            <br>
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" name="process_name" id="process_name" type="text" [(ngModel)]="processCreate.process_name"
+                  required />
+                <label for="process_name">Nombre Proceso</label>
+              </span>
+            </div>
+            <br>
+
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" name="process_description" id="process_description" type="text" [(ngModel)]="processCreate.process_description"
+                  required />
+                <label for="process_description">Descripción Proceso</label>
+              </span>
+            </div>
+            <br>
+
+            <button class="btn btn-primary btn-block" type="submit">Enviar</button>
+          </form>
+        </p-dialog>
+      </div>
+
+
+      <div class="parcela">
+        <p-dialog [(visible)]="addedproccesCreate" [style]="{ width: '50vw' }" [modal]="true" class="model"
+          styleClass="p-fluid" [baseZIndex]="999">
+          <h2 class="text-center">Asignar procesos a usuarios</h2>
+          <br />
+          <form (ngSubmit)="createUserServiceProcess()">
+
+            <br>
+
+
+            <div class="letter">Escoja el operario</div>
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <select class="col-12" id="getUsers" name="getUsers" [(ngModel)]="UserSelected" required>
+                  <option *ngFor="let type of getUsers" [ngValue]="type">{{ type.email }}</option>
+                </select>
+              </span>
+            </div>
+            <br>
+
+            <div class="letter">Escoja el operario</div>
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <select class="col-12" id="getProcess" name="getProcess" [(ngModel)]="processSelected" required>
+                  <option *ngFor="let type of getProcess" [ngValue]="type">{{ type.process_name }}</option>
+                </select>
+              </span>
+            </div>
+            <br>
+            <button class="btn btn-primary btn-block" type="submit">Enviar</button>
+          </form>
+        </p-dialog>
+      </div>
+
       <p-dialog [(visible)]="editVisibleParcel" [style]="{ width: '50vw' }" [modal]="true" class="model"
       styleClass="p-fluid" [baseZIndex]="999">
       <h2 class="text-center">Edita tu registro</h2>
@@ -341,8 +436,8 @@
             </div>
 
             <div class="width1">
-              <label for="service_price">Precio del servicio:&nbsp;</label>
-              <input type="number" id="service_price" name="service_price" [(ngModel)]="serviceProductSelect.service_price" required>
+              <label for="service_price">Precio del servicio unitario:&nbsp;</label>
+              <input type="number" id="service_price" name="service_price" [(ngModel)]="serviceProductSelect.service_unit_price" required>
             </div>
             <br>
 
@@ -379,6 +474,13 @@
               <input  type="tel" id="client_phone" name="client_phone" [(ngModel)]="serviceProductSelect.client_phone" required>
             </div>
             <br>
+
+            <div class="width1">
+              <label for="service_price">Cantidad&nbsp;</label>
+              <input type="number" id="service_price" name="service_price" [(ngModel)]="serviceProductSelect.amount_service" required>
+            </div>
+            <br>
+
 
             <div class="parcela">
               <label class="label" for="is_active">Activo:</label>

@@ -73,18 +73,19 @@ export interface materiaPcreate {
 export interface serviceProduct{
   creation_date: string;
   delivery_date: string;
-  service_price: number;
+  service_unit_price: number;
   client_name: string;
   client_phone: string;
   service_type: string;
   service_description: string;
+  amount_service: number,
   is_active: true;
-  user_register: 0
 }
 
 export interface servicesProcces{
+  process_id: number;
  service_id: number;
-user_id:number
+user_id:number;
 }
 export interface servicesProccesGet{
   process_id:number;
@@ -95,10 +96,9 @@ user_id:number
 
 
 export interface  processRegister{
-  proccess_price: number;
+  process_price: number;
   process_name: string;
   process_description:string;
-  process_user: number;
 }
 
 export interface serviceRawMaterial{

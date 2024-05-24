@@ -82,6 +82,11 @@ getallRegistry() :Observable<any>{
   const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
   return this.Http.get(this.url+'raw-materials/list-raw-materials/',{headers});
 }
+getUsers() :Observable<any>{
+  const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
+  return this.Http.get(this.url+'users/list-users/',{headers});
+}
+
 
 createParcela(data: materiaPcreate) {
   const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
@@ -138,7 +143,7 @@ createProcces(data: processRegister) {
 
 getProcces() {
   const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
-  return this.Http.post(this.url + 'process/list/',{headers});
+  return this.Http.get(this.url + 'process/list/',{headers});
 }
 
 

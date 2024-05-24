@@ -82,7 +82,9 @@ export class RegistryComponent  implements OnInit{
     client_phone: 'Teléfono del Cliente',
     service_type: 'Tipo de Servicio',
     service_description: 'Descripción del Servicio',
-    is_active: 'Activo'
+    is_active: 'Activo',
+    amount_service: 'Cantidad',
+    service_unit_price:'Precio unitario'
   };
 
   materiaPcreate:materiaPcreate={
@@ -96,31 +98,37 @@ export class RegistryComponent  implements OnInit{
   serviceProductSelect:serviceProduct = {
     creation_date: '',
     delivery_date: '',
-    service_price: 0,
+    service_unit_price: 0,
     client_name: '',
     client_phone: '',
     service_type: '',
     service_description: '',
     is_active: true,
-    user_register: 0
+    amount_service:0
   };
 
   serviceProduct: serviceProduct = {
     creation_date: '',
     delivery_date: '',
-    service_price: 0,
+    service_unit_price: 0,
     client_name: '',
     client_phone: '',
     service_type: '',
     service_description: '',
     is_active: true,
-    user_register: 0
+        amount_service:0
+
   };
 
   userRegistry: userdataRegistry={
     email:'',
     password:'',
     rol:''
+  }
+  processCreate: processRegister={
+    process_price:0,
+    process_description:'',
+    process_name:''
   }
   @ViewChild('dt') dt!: Table;
   newRegistry=0;
@@ -131,8 +139,18 @@ export class RegistryComponent  implements OnInit{
   serviceRawMaterialList:any;
   proccesServiceList:any;
   proccesList:any;
+  visibleProcessCreate:boolean=false;
+  addedproccesCreate: boolean=false
 
-
+  processSelected:any;
+  getProcess:any;
+  getUsers:any;
+  UserSelected:any;
+  servicesProcces:servicesProcces={
+    process_id: 0,
+ service_id: 0,
+user_id:0
+  }
   constructor(private services: ServicesService,
     private messagerService: MessageService,
     private confirmationService: ConfirmationService,
@@ -239,7 +257,6 @@ export class RegistryComponent  implements OnInit{
     }
 
     if(this.selectedOptionServices === 'confeccion' || this.selectedOptionServices === 'Reparacion'){
-      this.serviceProduct.user_register=this.tokenObject.user_id
       this.serviceProduct.creation_date= new Date().toISOString().substring(0,10);
 
       this.createRegistryService(this.serviceProduct)
@@ -250,7 +267,6 @@ export class RegistryComponent  implements OnInit{
         remaining_amount: this.remaining_amount,
         unit_price: this.precio,
         unit_of_measure:this.unit_selected,
-        user_register:this.tokenObject.user_id
 
       };
 
@@ -517,6 +533,9 @@ this.tokenObject=jwt_decode(this.tokenObject)
 
 
   async createServicesProcess(data: servicesProcces) {
+    data=this.servicesProcces
+    data.user_id=this.UserSelected.id
+    data.process_id=this.processSelected.id
     this.services.createServicesProcess(data).subscribe({
       next: (response) => {
         this.messagerService.add({
@@ -524,6 +543,8 @@ this.tokenObject=jwt_decode(this.tokenObject)
           summary: 'Movimiento exitoso',
           detail: 'Se logró hacer el registro del proceso de servicio',
         });
+        this.addedproccesCreate = false;
+
         this.onSelectionChange();
       },
       error: (err) => {
@@ -574,7 +595,7 @@ this.tokenObject=jwt_decode(this.tokenObject)
   async getProcces() {
     this.services.getProcces().subscribe({
       next: (response) => {
-        this.proccesList = response;
+        this.getProcess = response;
       },
       error: (err) => {
         this.messagerService.add({
@@ -621,5 +642,42 @@ this.tokenObject=jwt_decode(this.tokenObject)
     });
   }
 
+  showprocessRegistry(){
+this.visibleProcessCreate=true;
+  }
+
+
+  createProcessButton(){
+      this.createProcces(this.processCreate);
+  }
+
+ async  addedprocess(data: any){
+    this.servicesProcces.service_id=data.id
+    await  this.getUsersService()
+    await  this.getProcces()
+    this.addedproccesCreate=true;
+
+  }
+
+ async  createUserServiceProcess(){
+
+    this.createServicesProcess(this.servicesProcces);
+}
+
+
+async getUsersService() {
+  this.services.getUsers().subscribe({
+    next: (response) => {
+      this.getUsers = response;
+    },
+    error: (err) => {
+      this.messagerService.add({
+        severity: 'error',
+        summary: 'Hubo un error',
+        detail: 'No se pudo obtener la lista de usuarios',
+      });
+    },
+  });
+}
 
 }
