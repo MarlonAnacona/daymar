@@ -5,7 +5,7 @@
     <select [(ngModel)]="selectedOptionServices" (change)="onSelectionChange()">
 
       <option value="Materia_prima">Materia prima</option>
-      <option value="confeccion">Servicios</option>
+      <option value="Confección">Servicios</option>
       <option value="Usuarios">Usuarios</option>
     </select>
   </div>
@@ -50,7 +50,7 @@
           </button>
           <button type="button" pButton icon="pi pi-plus" iconPos="right" label="Crear procesos"
           (click)="showprocessRegistry()" style="margin: 0.5rem"
-          class="p-button-success p-mr-2" tooltipPosition="bottom" *ngIf="(product_materia && product_materia.length > 0 && selectedOptionServices=='confeccion') ||newRegistry==-1">
+          class="p-button-success p-mr-2" tooltipPosition="bottom" *ngIf="(product_materia && product_materia.length > 0 && selectedOptionServices=='Confección') ||newRegistry==-1">
         </button>
         </div>
     </ng-template>
@@ -67,8 +67,8 @@
 
           <th>Eliminar</th>
 
-          <th *ngIf="selectedOptionServices=='confeccion'"
-          >Agregar procesos</th>
+          <th *ngIf="selectedOptionServices=='Confección'"
+          >Asignar procesos</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-product_materia>
@@ -85,7 +85,7 @@
           <td>
             <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product_materia)"></button>
           </td>
-          <td *ngIf="selectedOptionServices=='confeccion'">
+          <td *ngIf="selectedOptionServices=='Confección'">
             <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success mr-2" (click)="addedprocess(product_materia)">
             </button>
           </td>
@@ -219,7 +219,7 @@
             <div class="field col-11 flex justify-content-center">
               <span class="p-float-label col-11 flex justify-content-center">
                 <select class="col-12" name="service_type" id="service_type" [(ngModel)]="serviceProduct.service_type" required>
-                  <option value="Confeccion">Confección</option>
+                  <option value="Confección">Confección</option>
                   <option value="Reparacion">Reparación</option>
                 </select>
                 <label for="service_type">Tipo de Servicio</label>
@@ -284,8 +284,8 @@
             <div class="field col-11 flex justify-content-center">
               <span class="p-float-label col-11 flex justify-content-center">
                 <select class="col-12" name="service_type" id="service_type" [(ngModel)]="serviceProduct.service_type" required>
-                  <option value="Confeccion">Adminitrador</option>
-                  <option value="Reparacion">Operador</option>
+                  <option value="Administrador">Adminitrador</option>
+                  <option value="Operador">Operador</option>
                 </select>
                 <label for="service_type">Rol de usuario</label>
               </span>
@@ -363,7 +363,7 @@
             </div>
             <br>
 
-            <div class="letter">Escoja el operario</div>
+            <div class="letter">Escoja el Proceso</div>
             <div class="field col-11 flex justify-content-center">
               <span class="p-float-label col-11 flex justify-content-center">
                 <select class="col-12" id="getProcess" name="getProcess" [(ngModel)]="processSelected" required>
@@ -420,7 +420,7 @@
             <button class="boton" type="submit">Editar</button>
           </form>
 
-          <form *ngIf="selectedOptionServices === 'confeccion'" (ngSubmit)="onSubmit2Service()">
+          <form *ngIf="selectedOptionServices === 'Confección'" (ngSubmit)="onSubmit2Service()">
 
             <br>
 
@@ -444,7 +444,7 @@
             <div class="length1">
               <label for="service_type">Tipo de servicio:&nbsp;</label>
               <select id="service_type" name="service_type" [(ngModel)]="serviceProductSelect.service_type" required>
-                <option value="Confeccion">Confección</option>
+                <option value="Confección">Confección</option>
                 <option value="Reparacion">Reparación</option>
               </select>
             </div>
@@ -490,7 +490,33 @@
 
             <button class="boton" type="submit">Editar</button>
           </form>
+          <div class="additional-fields">
+            <br>
 
+
+            <div class="parcela">
+              <label class="label" for="person_in_charge">Encargado:</label>
+              <select id="person_in_charge" name="person_in_charge" [(ngModel)]="UserSelected1"  (ngModelChange)="updateProcesses()" required>
+                <option *ngFor="let email of uniqueEmails" [value]="email">{{ email }}</option>
+              </select>
+            </div>
+            <br>
+
+            <div class="parcela">
+              <label class="label" for="process_name">Nombre del proceso:</label>
+              <select id="process_name" name="process_name" [(ngModel)]="processSelected" [disabled]="!UserSelected1 || !UserSelected1.length" (ngModelChange)="updatePrice()" required>
+                <option value="">Selecciona un proceso</option>
+                <option *ngFor="let process of processesFound" [value]="process">{{ process }}</option>
+              </select>
+            </div>
+            <br>
+
+            <div class="parcela">
+              <label class="label" for="process_price">Precio:</label>
+              <input type="number" id="process_price" name="process_price"  [(ngModel)]="selectedProcessPrice" [disabled]="!UserSelected1"  required>
+            </div>
+            <br>
+          </div>
       </p-dialog>
 
     </div>

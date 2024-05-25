@@ -87,12 +87,24 @@ export interface servicesProcces{
  service_id: number;
 user_id:number;
 }
+
+export interface GetservicesProcces{
+  process_id: number;
+ service_id: number;
+user_id:number;
+email:string;
+process_name:string;
+process_price:number;
+}
 export interface servicesProccesGet{
   process_id:number;
  service_id: number;
 user_id:number
 }
-
+export interface Process {
+  process_id: number;
+  process_name: string;
+}
 
 
 export interface  processRegister{

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { materiaP, materiaPcreate, processRegister, serviceProduct, serviceRawMaterial, servicesProcces, userdataRegistry } from '../models/interfaces';
+import { GetservicesProcces, Process, materiaP, materiaPcreate, processRegister, serviceProduct, serviceRawMaterial, servicesProcces, userdata, userdataRegistry } from '../models/interfaces';
 import { ServicesService } from '../services/services.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { HttpClient } from '@angular/common/http';
@@ -137,8 +137,8 @@ export class RegistryComponent  implements OnInit{
 
   formChanged: boolean = false;
   serviceRawMaterialList:any;
-  proccesServiceList:any;
-  proccesList:any;
+  proccesServiceList: GetservicesProcces[]=[];
+  proccesList: GetservicesProcces[]=[];
   visibleProcessCreate:boolean=false;
   addedproccesCreate: boolean=false
 
@@ -146,11 +146,20 @@ export class RegistryComponent  implements OnInit{
   getProcess:any;
   getUsers:any;
   UserSelected:any;
+  UserSelected1:any;
+  usersInfo:any;
+  processInfo:any;
   servicesProcces:servicesProcces={
     process_id: 0,
  service_id: 0,
 user_id:0
   }
+  processesFound=[]
+  selectedProcessPrice:number=0;
+
+  users: userdata[] = [];
+  processes: Process[] = [];
+  uniqueEmails:any[]=[];
   constructor(private services: ServicesService,
     private messagerService: MessageService,
     private confirmationService: ConfirmationService,
@@ -203,7 +212,7 @@ user_id:0
     if (this.selectedOptionServices === 'Materia_prima') {
       this.visibleCreateFarm = true;
 
-    } else if (this.selectedOptionServices === 'confeccion') {
+    } else if (this.selectedOptionServices === 'Confección') {
       this.visibleCreateService=true;
 
     }
@@ -219,7 +228,7 @@ user_id:0
       this.columnas=[]
       await this.getRegistry()
       // Llamar al servicio para obtener los datos de la opción 1
-    } else if (this.selectedOptionServices === 'confeccion') {
+    } else if (this.selectedOptionServices === 'Confección') {
       // Llamar al servicio para obtener los datos de la opción 2
       this.product_materia= []
       this.columnas=[]
@@ -256,7 +265,7 @@ user_id:0
     this.tokenObject=jwt_decode(this.tokenObject)
     }
 
-    if(this.selectedOptionServices === 'confeccion' || this.selectedOptionServices === 'Reparacion'){
+    if(this.selectedOptionServices === 'Confección' || this.selectedOptionServices === 'Reparacion'){
       this.serviceProduct.creation_date= new Date().toISOString().substring(0,10);
 
       this.createRegistryService(this.serviceProduct)
@@ -320,21 +329,19 @@ this.tokenObject=jwt_decode(this.tokenObject)
   }
 
 
-  showParcelEdit( showData: any) {
+ async showParcelEdit( showData: any) {
     this.editVisibleParcel = true;
     if (this.selectedOptionServices === 'Materia_prima') {
 
       this.materiaPcreate = {...showData}
 
-    } else if (this.selectedOptionServices === 'confeccion') {
+    } else if (this.selectedOptionServices === 'Confección') {
       this.serviceProductSelect= {...showData}
+      await this.getProccesService(showData);
+
 
       }
   }
-
-
-
-
 
   async getRegistryConfe(){
 
@@ -557,10 +564,34 @@ this.tokenObject=jwt_decode(this.tokenObject)
     });
   }
 
-  async getProccesService() {
+  updateProcesses() {
+    for (const email of this.uniqueEmails) {
+      const processesByEmail = this.processInfo.filter((item: { email: any; }) => item.email === email);
+
+      const processes = processesByEmail.map((item: { process_name: any; }) => item.process_name);
+
+      this.processesFound = this.processesFound.concat(processes);
+    }
+  }
+
+  updatePrice() {
+    const selectedProcess = this.processInfo.find((item: { process_name: any; email: any; }) =>
+      item.process_name === this.processSelected && item.email === this.UserSelected1
+    );
+
+    if (selectedProcess) {
+      this.selectedProcessPrice = selectedProcess.process_price*this.serviceProductSelect.amount_service;
+    } else {
+      this.selectedProcessPrice = 0;
+    }
+  }
+  async getProccesService(showData:any) {
     this.services.getProccesService().subscribe({
       next: (response) => {
         this.proccesServiceList = response;
+        const ServicesSeles= this.proccesServiceList.filter((item: { service_id: any; }) => item.service_id === showData.id);
+        this.uniqueEmails = [...new Set(ServicesSeles.map((item: { email: any; }) => item.email))];
+        this.processInfo=ServicesSeles
       },
       error: (err) => {
         this.messagerService.add({

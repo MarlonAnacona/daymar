@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
-import { materiaP, materiaPcreate, serviceProduct, user, userLogin, userdataUpdate, userdataUpdatePassword, processRegister, servicesProcces, userdataRegistry, serviceRawMaterial } from '../models/interfaces';
+import { materiaP, materiaPcreate, serviceProduct, user, userLogin, userdataUpdate, userdataUpdatePassword, processRegister, servicesProcces, userdataRegistry, serviceRawMaterial, GetservicesProcces } from '../models/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -131,9 +131,9 @@ createServicesProcess(data: servicesProcces) {
   return this.Http.post(this.url + 'service_process/register/', data,{headers});
 }
 
-getProccesService() {
+getProccesService(): Observable<GetservicesProcces[]> {
   const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
-  return this.Http.post(this.url + 'service_process/list/',{headers});
+  return this.Http.get<GetservicesProcces[]>(this.url + 'service_process/list/',{headers});
 }
 
 createProcces(data: processRegister) {
