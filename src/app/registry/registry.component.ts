@@ -176,6 +176,7 @@ user_id:0
     this.unit_of_measure= ["Metros" , "cuadrados", "Unidad", "Centimetro"]
   }
 
+
   async getRegistry(){
     this.product_materia= this.services.getallRegistry().subscribe({
       next:(response)=>{

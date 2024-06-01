@@ -35,6 +35,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { ProfileComponent } from './profile/profile.component';
+import { DropdownModule } from "primeng/dropdown";
 
 const routes: Routes = [
   { path: '', redirectTo: 'Login', pathMatch: 'full' },
@@ -98,6 +99,7 @@ const routes: Routes = [
   DialogModule,
   TableModule,
   CardModule,
+  DropdownModule
 
   ],
   providers: [MessageService, ConfirmationService, AuthGuardService, Authservice],
