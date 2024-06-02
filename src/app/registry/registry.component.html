@@ -1,7 +1,7 @@
 <menu-bar-user></menu-bar-user>
 <p-toast></p-toast>
 <div id="Principal" style="display: flexbox">
-  <div id="textoInicial" style="text-align: center">Registro de:
+  <div id="textoInicial" style="text-align: center">Hola, Gestiona los movimientos de:
     <select [(ngModel)]="selectedOptionServices" (change)="onSelectionChange()">
 
       <option value="Materia_prima">Materia prima</option>
@@ -204,7 +204,8 @@
             <option value="Confección">Confección</option>
             <option value="Reparacion">Reparación</option>
           </select>
-          <label for="service_type">Tipo de Servicio</label>
+          <label *ngIf="!serviceProduct.service_type" for="service_type">Rol de usuario</label>
+
         </span>
       </div>
       <br>
@@ -266,7 +267,8 @@
                   <option value="Administrador">Adminitrador</option>
                   <option value="Operador">Operador</option>
                 </select>
-                <label for="service_type">Rol de usuario</label>
+
+                <label *ngIf="!serviceProduct.service_type" for="service_type">Rol de usuario</label>
               </span>
             </div>
             <br>
@@ -292,7 +294,7 @@
 
             <div class="field col-11 flex justify-content-center">
               <span class="p-float-label col-11 flex justify-content-center">
-                <input class="col-12" name="proccess_price" id="proccess_price" type="number" [(ngModel)]="processCreate.process_price"
+                <input class="col-12" name="proccess_price" pInputText id="proccess_price" type="number" [(ngModel)]="processCreate.process_price"
                   required />
                 <label for="proccess_price">Costo proceso</label>
               </span>
@@ -300,7 +302,7 @@
             <br>
             <div class="field col-11 flex justify-content-center">
               <span class="p-float-label col-11 flex justify-content-center">
-                <input class="col-12" name="process_name" id="process_name" type="text" [(ngModel)]="processCreate.process_name"
+                <input class="col-12" pInputText name="process_name" id="process_name" type="text" [(ngModel)]="processCreate.process_name"
                   required />
                 <label for="process_name">Nombre Proceso</label>
               </span>
@@ -309,7 +311,7 @@
 
             <div class="field col-11 flex justify-content-center">
               <span class="p-float-label col-11 flex justify-content-center">
-                <input class="col-12" name="process_description" id="process_description" type="text" [(ngModel)]="processCreate.process_description"
+                <input class="col-12" pInputText name="process_description" id="process_description" type="text" [(ngModel)]="processCreate.process_description"
                   required />
                 <label for="process_description">Descripción Proceso</label>
               </span>
@@ -468,34 +470,36 @@
             <br>
 
             <button class="boton" type="submit">Editar</button>
+
+            <div class="additional-fields">
+              <br>
+
+
+              <div class="parcela">
+                <label class="label" for="person_in_charge">Encargado:</label>
+                <select id="person_in_charge" name="person_in_charge" [(ngModel)]="UserSelected1"  (ngModelChange)="updateProcesses()" required>
+                  <option *ngFor="let email of uniqueEmails" [value]="email">{{ email }}</option>
+                </select>
+              </div>
+              <br>
+
+              <div class="parcela">
+                <label class="label" for="process_name">Nombre del proceso:</label>
+                <select id="process_name" name="process_name" [(ngModel)]="processSelected" [disabled]="!UserSelected1 || !UserSelected1.length" (ngModelChange)="updatePrice()" required>
+                  <option value="">Selecciona un proceso</option>
+                  <option *ngFor="let process of processesFound" [value]="process">{{ process }}</option>
+                </select>
+              </div>
+              <br>
+
+              <div class="parcela">
+                <label class="label" for="process_price">Precio:</label>
+                <input type="number" id="process_price" name="process_price"  [(ngModel)]="selectedProcessPrice" [disabled]="!UserSelected1"  required>
+              </div>
+              <br>
+            </div>
           </form>
-          <div class="additional-fields">
-            <br>
 
-
-            <div class="parcela">
-              <label class="label" for="person_in_charge">Encargado:</label>
-              <select id="person_in_charge" name="person_in_charge" [(ngModel)]="UserSelected1"  (ngModelChange)="updateProcesses()" required>
-                <option *ngFor="let email of uniqueEmails" [value]="email">{{ email }}</option>
-              </select>
-            </div>
-            <br>
-
-            <div class="parcela">
-              <label class="label" for="process_name">Nombre del proceso:</label>
-              <select id="process_name" name="process_name" [(ngModel)]="processSelected" [disabled]="!UserSelected1 || !UserSelected1.length" (ngModelChange)="updatePrice()" required>
-                <option value="">Selecciona un proceso</option>
-                <option *ngFor="let process of processesFound" [value]="process">{{ process }}</option>
-              </select>
-            </div>
-            <br>
-
-            <div class="parcela">
-              <label class="label" for="process_price">Precio:</label>
-              <input type="number" id="process_price" name="process_price"  [(ngModel)]="selectedProcessPrice" [disabled]="!UserSelected1"  required>
-            </div>
-            <br>
-          </div>
       </p-dialog>
 
     </div>

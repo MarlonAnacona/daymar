@@ -271,12 +271,18 @@ user_id:0
 
       this.createRegistryService(this.serviceProduct)
     }else{
+      this.tokenObject=localStorage.getItem("token")
+
+      if(this.tokenObject!=null){
+      this.tokenObject=jwt_decode(this.tokenObject)
+      }
       const data = {
         name: this.name_registry,
         material_type: this.materialselected,
         remaining_amount: this.remaining_amount,
         unit_price: this.precio,
         unit_of_measure:this.unit_selected,
+        user_register:this.tokenObject.user_id
 
       };
 
