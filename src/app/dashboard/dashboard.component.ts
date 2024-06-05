@@ -55,11 +55,11 @@ export class DashboardComponent implements OnInit {
   },error:(err)=>{}})
 
 
+
   this.service.getProccesService().subscribe({next:(data)=>{
-    this.process=data.map((x:any)=>x.process_price);
-  },error:(err)=>{}})
-
-
+    const ServicesSeles= data.filter((item: { service_id: any; }) => item.service_id === showData.id);
+    this.uniqueEmails = [...new Set(ServicesSeles.map((item: { email: any; }) => item.email))];
+    this.processInfo=ServicesSeles  },error:(err)=>{}})
 
   }
 
@@ -372,8 +372,16 @@ export class DashboardComponent implements OnInit {
 
 
 
+  onChangeUsers(){
+
+  }
 
 
+
+  changeServicesUser(){
+
+
+  }
 
 
 
