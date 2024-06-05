@@ -97,9 +97,9 @@ createService(data: serviceProduct) {
   return this.Http.post(this.url + 'service/create-service/', data,{headers});
 }
 
-getallRegistryService() :Observable<any>{
+getallRegistryService() :Observable<any[]>{
   const headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
-  return this.Http.get(this.url+'service/list-service/',{headers});
+  return this.Http.get<any[]>(this.url+'service/list-service/',{headers});
 }
 
 updateService(id:any, dataUpdate:any): Observable<any>{

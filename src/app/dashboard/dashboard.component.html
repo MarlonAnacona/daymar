@@ -1,85 +1,8 @@
 
 <menu-bar-user></menu-bar-user>
-<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
   <div class="container-fluid">
     <h1 class="titulo">Estadística de tus finanzas</h1>
-    <br/>
-    <div class="header-body">
-      <!-- Card stats -->
-      <div class="row center">
-        <!-- Escoger tu graja -->
-        <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0">
-            <div class="card-body">
-              <div class="row ">
-                <div class="text-center">
-                  <h5 class="card-title text-uppercase mb-0 bold-text">
-                    Escoja la granja
-                  </h5>
-                </div>
-                <div class="col-auto">
-                  <br/>
-                  <div>
-                    <label for="seedName" class="bold-text">Estadisticas:&nbsp;</label>
-                    <select id="seedName" name="seedName" [(ngModel)]="farmName" (ngModelChange)="onSeedNameChange()"
-                      required>
-                      <option value="">Seleccione un mes</option>
-                      <option *ngFor="let option of monthOptions" [value]="option.farm_name">{{ option.farm_name }}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                    <i class="fas fa-chart-bar"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Muestra longitud -->
-        <div class="col-xl-3 col-lg-6 ">
-          <div class="card card-stats mb-4 mb-xl-0">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase mb-0">
-                    Ubicación longitud:
-                  </h5>
-                  <span class="h2 font-weight-bold mb-0" style="color: #68902B;">{{long}}</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
-                    <i class="fas fa-chart-pie"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Muestra latitud -->
-        <div class="col-xl-3 col-lg-6">
-          <div class="card card-stats mb-4 mb-xl-0">
-            <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <h5 class="card-title text-uppercase mb-0">
-                    Ubicación latitud:
-                  </h5>
-                  <span class="h2 font-weight-bold mb-0" style="color: #68902B;">{{latitude}}</span>
-                </div>
-                <div class="col-auto">
-                  <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                    <i class="fas fa-users"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
-</div>
 <div class="container-fluid mt--7">
   <!-- Temperatura -->
   <div class="row mt-5 justify-content-center text-center">
@@ -89,16 +12,16 @@
           <div class="row align-items-center">
             <div class="text-center">
               <h6 class="text-black text-light ls-1 mb-1">Datos</h6>
-              <h2 class="text-black mb-0">Temperatura °C </h2>
+              <h2 class="text-black mb-0">Servicios</h2>
               <br/>
-              <select id="seedName" name="days" [(ngModel)]="daysSelecte"
+              <!-- <select id="seedName" name="days" [(ngModel)]="daysSelecte"
                 (ngModelChange)="onSeedNameChangeDay(daysSelecte)" required>
                 <option value="1">1 Día </option>
                 <option value="3">3 Días </option>
                 <option value="7">7 Días </option>
                 <option value="14">14 Días </option>
                 <option value="16">16 Días </option>
-              </select>
+              </select> -->
             </div>
             <div class="col">
               <ul class="nav nav-pills justify-content-end">

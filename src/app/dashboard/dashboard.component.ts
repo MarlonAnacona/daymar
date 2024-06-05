@@ -23,23 +23,43 @@ export class DashboardComponent implements OnInit {
   monthOptions:any[]=[];
   farmName: string ="";
   selectFarmOption:any;
-
+  services:any[]=[];
+  users:any[]=[]
+  materials:any[]=[]
+  process:any;
+  serviciosgetAll:any;
   constructor(private service:ServicesService){
 
   }
-  ngOnInit() {
+  async ngOnInit() {
     this.service.refresacarToken()
-    //Aqui será para tomar el mes a elegir
-    this.service.getMonth(localStorage.getItem('token')).subscribe({
-      next:(data)=>{
-        this.monthOptions=data;
+    this.service.getallRegistryService().subscribe({next:(data)=>{
+      this.serviciosgetAll=data;
+     this.days=data.map(x=>x.client_name+' '+x.creation_date);
+     this.services=data.map(x=>x.amount_service*x.service_unit_price);
 
-      },
-      error:(err)=>{
-      console.log(err)
-      }
+      this.createChart()
+    },error:(err)=>{}})
 
-    })
+
+  this.service.getUsers().subscribe({next:(data)=>{
+    this.users=data
+
+  },error:(err)=>{}})
+
+
+  this.service.getallRegistry().subscribe({next:(data)=>{
+    this.materials=data.map((x:any)=>x.email);
+
+    this.materials= data
+  },error:(err)=>{}})
+
+
+  this.service.getProccesService().subscribe({next:(data)=>{
+    this.process=data.map((x:any)=>x.process_price);
+  },error:(err)=>{}})
+
+
 
   }
 
@@ -96,7 +116,7 @@ export class DashboardComponent implements OnInit {
     }
 
     this.chart = new Chart('MyChart', {
-      type: 'line', //this denotes tha type of chart
+      type: 'bar', //this denotes tha type of chart
 
       data: {
         // values on X-Axis
@@ -107,7 +127,7 @@ export class DashboardComponent implements OnInit {
           {
             label: 'Produccion ',
 
-            data: [...this.temperature],
+            data: [...this.services],
 
           },
 
@@ -352,29 +372,10 @@ export class DashboardComponent implements OnInit {
 
 
 
-  onSeedNameChange() {
-    this.selectFarmOption = this.monthOptions.find(option => option.farm_name === this.farmName);
-
-    this.getDaysWheater(this.selectFarmOption)
-  }
-
-  onSeedNameChangeDay(day:number) {
-    this.selectFarmOption = this.monthOptions.find(option => option.farm_name === this.farmName);
-    this.long=this.selectFarmOption.longitude
-    this.latitude=this.selectFarmOption.latitude
-  }
 
 
-  getDaysWheater(month:any){
-    this.service.getStadistic(localStorage.getItem('token'),month).subscribe({
-      next: (response)=>{
-        //buscara los resultados
-        this.createChart();
-      }, error: (err)=>{
 
-      }
-    })
-  }
+
 
 
 }

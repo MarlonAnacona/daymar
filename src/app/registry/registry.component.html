@@ -358,149 +358,155 @@
         </p-dialog>
       </div>
 
-      <p-dialog [(visible)]="editVisibleParcel" [style]="{ width: '50vw' }" [modal]="true" class="model"
-      styleClass="p-fluid" [baseZIndex]="999">
-      <h2 class="text-center">Edita tu registro</h2>
-          <br />
-          <form *ngIf="selectedOptionServices === 'Materia_prima'" (ngSubmit)="onSubmit2MateriaPrima()">
-
-            <br>
-            <div class="seedName1">
-              <label class="label" for="seedName">Nombre del registro:</label>
-              <input  id="seedName" name="seedName" type="text" [(ngModel)]="materiaPcreate.name" required>
-          </div>
-          <br>
-
-          <div class="width1">
-              <label class="label" for="unit_price">Precio por unidad:</label>
-              <input  type="number" id="unit_price" name="unit_price" [(ngModel)]="materiaPcreate.unit_price" required>
-          </div>
-          <br>
-
-          <div class="length1">
-              <label class="label" for="remaining_amount">Cantidad restante:</label>
-              <input type="text" id="remaining_amount" name="remaining_amount" [(ngModel)]="materiaPcreate.remaining_amount" required>
-          </div>
-          <br>
-
-          <div class="cropModality1">
-              <label class="label" for="material_type">Tipo de material:</label>
-              <select  id="material_type" name="material_type" [(ngModel)]="materiaPcreate.material_type" required>
-                  <option *ngFor="let type of material_type" [value]="type">{{ type }}</option>
-              </select>
-          </div>
-          <br>
-
-          <div class="parcela">
-              <label class="label" for="unit_of_measure">Unidad de medida:</label>
-              <select  id="unit_of_measure" name="unit_of_measure" [(ngModel)]="materiaPcreate.unit_of_measure" required>
-                  <option *ngFor="let measure of unit_of_measure" [value]="measure">{{ measure }}</option>
-              </select>
-          </div>
-<br>
-            <button class="boton" type="submit">Editar</button>
-          </form>
-
-          <form *ngIf="selectedOptionServices === 'Confección'" (ngSubmit)="onSubmit2Service()">
-
-            <br>
-
-            <div class="seedName1">
-              <label for="service_description">Descripción del servicio:&nbsp;</label>
-              <input id="service_description" name="service_description" type="text" [(ngModel)]="serviceProductSelect.service_description" required>
+      <p-dialog [(visible)]="editVisibleParcel" [style]="{ width: '50vw' }" [modal]="true" class="model" styleClass="p-fluid" [baseZIndex]="999">
+        <h2 class="text-center">Edita tu registro</h2>
+        <br />
+        <form *ngIf="selectedOptionServices === 'Materia_prima'" (ngSubmit)="onSubmit2MateriaPrima()">
+            <div class="field col-11 flex justify-content-center">
+                <span class="p-float-label col-11 flex justify-content-center">
+                    <input class="col-12" id="seedName" name="seedName" pInputText type="text" [(ngModel)]="materiaPcreate.name" required />
+                    <label for="seedName">Nombre del registro</label>
+                </span>
             </div>
-
-            <br>
-
-            <div class="texInformation">
-              <!-- Aquí puedes mostrar información adicional si lo necesitas -->
+            <br />
+            <div class="field col-11 flex justify-content-center">
+                <span class="p-float-label col-11 flex justify-content-center">
+                    <input class="col-12" id="unit_price" name="unit_price" pInputText type="number" [(ngModel)]="materiaPcreate.unit_price" required />
+                    <label for="unit_price">Precio por unidad</label>
+                </span>
             </div>
-
-            <div class="width1">
-              <label for="service_price">Precio del servicio unitario:&nbsp;</label>
-              <input type="number" id="service_price" name="service_price" [(ngModel)]="serviceProductSelect.service_unit_price" required>
+            <br />
+            <div class="field col-11 flex justify-content-center">
+                <span class="p-float-label col-11 flex justify-content-center">
+                    <input class="col-12" id="remaining_amount" name="remaining_amount" pInputText type="text" [(ngModel)]="materiaPcreate.remaining_amount" required />
+                    <label for="remaining_amount">Cantidad restante</label>
+                </span>
             </div>
-            <br>
+            <br />
+            <div class="field col-11 flex justify-content-center">
+                <span class="p-float-label col-11 flex justify-content-center">
+                    <select class="col-12" id="material_type" name="material_type" [(ngModel)]="materiaPcreate.material_type" required>
+                        <option *ngFor="let type of material_type" [value]="type">{{ type }}</option>
+                    </select>
+                    <label *ngIf="!materiaPcreate.material_type" for="material">Tipo de material</label>
 
-            <div class="length1">
-              <label for="service_type">Tipo de servicio:&nbsp;</label>
-              <select id="service_type" name="service_type" [(ngModel)]="serviceProductSelect.service_type" required>
-                <option value="Confección">Confección</option>
-                <option value="Reparacion">Reparación</option>
-              </select>
+                </span>
             </div>
+            <br />
+            <div class="field col-11 flex justify-content-center">
+                <span class="p-float-label col-11 flex justify-content-center">
+                    <select class="col-12" id="unit_of_measure" name="unit_of_measure" [(ngModel)]="materiaPcreate.unit_of_measure" required>
+                        <option *ngFor="let measure of unit_of_measure" [value]="measure">{{ measure }}</option>
+                    </select>
+                    <label *ngIf="!materiaPcreate.unit_of_measure" for="unit_of_measure">Unidad de medida</label>
 
-            <br>
-
-            <div class="parcela">
-              <label class="label" for="creation_date">Fecha de creación:</label>
-              <input  readonly type="date" id="creation_date" name="creation_date" [(ngModel)]="serviceProductSelect.creation_date" required>
+                </span>
             </div>
-            <br>
-
-            <div class="parcela">
-              <label class="label" for="delivery_date">Fecha de entrega:</label>
-              <input  type="date" id="delivery_date" name="delivery_date" [(ngModel)]="serviceProductSelect.delivery_date" required>
+            <br />
+            <button class="btn btn-primary btn-block" type="submit">Editar</button>
+        </form>
+        <form *ngIf="selectedOptionServices === 'Confección'" (ngSubmit)="onSubmit2Service()">
+          <div class="field-container">
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" id="service_description" name="service_description" pInputText type="text" [(ngModel)]="serviceProductSelect.service_description" required />
+                <label for="service_description">Descripción del servicio</label>
+              </span>
             </div>
-            <br>
-
-            <div class="parcela">
-              <label class="label" for="client_name">Nombre del cliente:</label>
-              <input  type="text" id="client_name" name="client_name" [(ngModel)]="serviceProductSelect.client_name" required>
+            <br />
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" id="service_price" name="service_price" pInputText type="number" [(ngModel)]="serviceProductSelect.service_unit_price" required />
+                <label for="service_price">Precio del servicio unitario</label>
+              </span>
             </div>
-            <br>
-
-            <div class="parcela">
-              <label class="label" for="client_phone">Teléfono del cliente:</label>
-              <input  type="tel" id="client_phone" name="client_phone" [(ngModel)]="serviceProductSelect.client_phone" required>
+            <br />
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <select class="col-12" id="service_type" name="service_type" [(ngModel)]="serviceProductSelect.service_type" required>
+                  <option value="Confección">Confección</option>
+                  <option value="Reparacion">Reparación</option>
+                </select>
+                <label *ngIf="!serviceProductSelect.service_type" for="service_type">Tipo de servicio</label>
+              </span>
             </div>
-            <br>
-
-            <div class="width1">
-              <label for="service_price">Cantidad&nbsp;</label>
-              <input type="number" id="service_price" name="service_price" [(ngModel)]="serviceProductSelect.amount_service" required>
+            <br />
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" id="creation_date" name="creation_date" pInputText readonly type="date" [(ngModel)]="serviceProductSelect.creation_date" required />
+                <label for="creation_date">Fecha de creación</label>
+              </span>
             </div>
-            <br>
-
-
-            <div class="parcela">
-              <label class="label" for="is_active">Activo:</label>
-              <input class="value" type="checkbox" id="is_active" name="is_active" [(ngModel)]="serviceProductSelect.is_active">
+            <br />
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" id="delivery_date" name="delivery_date" pInputText type="date" [(ngModel)]="serviceProductSelect.delivery_date" required />
+                <label for="delivery_date">Fecha de entrega</label>
+              </span>
             </div>
-            <br>
-
-            <button class="boton" type="submit">Editar</button>
-
+            <br />
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" id="client_name" name="client_name" pInputText type="text" [(ngModel)]="serviceProductSelect.client_name" required />
+                <label for="client_name">Nombre del cliente</label>
+              </span>
+            </div>
+            <br />
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" id="client_phone" name="client_phone" pInputText type="tel" [(ngModel)]="serviceProductSelect.client_phone" required />
+                <label for="client_phone">Teléfono del cliente</label>
+              </span>
+            </div>
+            <br />
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="col-12" id="amount_service" name="amount_service" pInputText type="number" [(ngModel)]="serviceProductSelect.amount_service" required />
+                <label for="amount_service">Cantidad</label>
+              </span>
+            </div>
+            <br />
+            <div class="field col-11 flex justify-content-center">
+              <span class="p-float-label col-11 flex justify-content-center">
+                <input class="value" type="checkbox" id="is_active" name="is_active" [(ngModel)]="serviceProductSelect.is_active" />
+                <label for="is_active">Activo</label>
+              </span>
+            </div>
+            <br />
+            <button class="btn btn-primary btn-block" type="submit">Editar</button>
+            <br />
             <div class="additional-fields">
-              <br>
-
-
-              <div class="parcela">
-                <label class="label" for="person_in_charge">Encargado:</label>
-                <select id="person_in_charge" name="person_in_charge" [(ngModel)]="UserSelected1"  (ngModelChange)="updateProcesses()" required>
-                  <option *ngFor="let email of uniqueEmails" [value]="email">{{ email }}</option>
-                </select>
+              <div class="field col-11 flex justify-content-center">
+                <span class="p-float-label col-11 flex justify-content-center">
+                  <select class="col-12" id="person_in_charge" name="person_in_charge" [(ngModel)]="UserSelected1" (ngModelChange)="updateProcesses()" required>
+                    <option *ngFor="let email of uniqueEmails" [value]="email">{{ email }}</option>
+                  </select>
+                  <label *ngIf="!UserSelected1" for="person_in_charge">Encargado</label>
+                </span>
               </div>
-              <br>
-
-              <div class="parcela">
-                <label class="label" for="process_name">Nombre del proceso:</label>
-                <select id="process_name" name="process_name" [(ngModel)]="processSelected" [disabled]="!UserSelected1 || !UserSelected1.length" (ngModelChange)="updatePrice()" required>
-                  <option value="">Selecciona un proceso</option>
-                  <option *ngFor="let process of processesFound" [value]="process">{{ process }}</option>
-                </select>
+              <br />
+              <div class="field col-11 flex justify-content-center">
+                <span class="p-float-label col-11 flex justify-content-center">
+                  <select class="col-12" id="process_name" name="process_name" [(ngModel)]="processSelected" [disabled]="!UserSelected1 || !UserSelected1.length" (ngModelChange)="updatePrice()" required>
+                    <option value="">Selecciona un proceso</option>
+                    <option *ngFor="let process of processesFound" [value]="process">{{ process }}</option>
+                  </select>
+                  <label *ngIf="!processSelected" for="process_name">Nombre del proceso</label>
+                </span>
               </div>
-              <br>
-
-              <div class="parcela">
-                <label class="label" for="process_price">Precio:</label>
-                <input type="number" id="process_price" name="process_price"  [(ngModel)]="selectedProcessPrice" [disabled]="!UserSelected1"  required>
+              <br />
+              <div class="field col-11 flex justify-content-center">
+                <span class="p-float-label col-11 flex justify-content-center">
+                  <input class="col-12" id="process_price" name="process_price" pInputText type="number" [(ngModel)]="selectedProcessPrice" [disabled]="!UserSelected1" required />
+                  <label for="process_price">Precio</label>
+                </span>
               </div>
-              <br>
             </div>
-          </form>
+          </div>
+        </form>
 
-      </p-dialog>
+
+    </p-dialog>
 
     </div>
   </p-card>
